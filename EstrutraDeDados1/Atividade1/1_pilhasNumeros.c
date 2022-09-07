@@ -17,6 +17,8 @@
 #include <stdbool.h>
 
 #define NAME "entradaEX01.txt"
+#define PARES "pares.txt"
+#define IMPARES "impares.txt"
 
 #define N 10
 
@@ -88,12 +90,15 @@ void imprimirPilha(PilhaPar pPar, PilhaImpar pImpar) {
     }
 }
 
-int removerPilhaPar(PilhaPar *pilha) {
-    return pilha->topo--;
-}
-
-int removerPilhaImpar(PilhaImpar *pilha) {
-    return pilha->topo--;
+int removerPilha(PilhaImpar *pImpar, PilhaPar *pPar) {
+    int option;
+    printf("Remove from:\n1 - Odd stack\n2 - Even stack\n");
+    scanf("%d", &option);
+    if (option == 1) {
+        return pImpar->topo--;
+    } else {
+        return pPar->topo--;
+    }
 }
 
 int tamanhoPar(PilhaPar *pilha) {
@@ -104,11 +109,9 @@ int tamanhoImpar(PilhaImpar *pilha) {
     return pilha->topo;
 }
 
-FILE *op_file(char *name)
-{
+FILE *op_file(char *name) {
     FILE *file = fopen(name, "r");
-    if (file == NULL)
-    {
+    if (file == NULL) {
         printf("error: fail to open file\n");
         return NULL;
     }
@@ -131,31 +134,70 @@ int rd_file(FILE *file, PilhaPar *pPar, PilhaImpar *pImpar) {
     }
 }
 
+FILE *cr_file(char *name) {
+    FILE *file = fopen(name, "w+");
+    if (file == NULL) {
+        printf("error: fail to create file\n");
+        return NULL;
+    }
+    return file;
+}
+
+FILE sv_file(FILE *filePar, FILE *fileImpar, PilhaPar pPar, PilhaImpar pImpar) {
+    for (int i = 0; i < pPar.topo; i++) {
+        fprintf(filePar, "%d, ", pPar.numeros[i].nPares);
+    }
+    for (int i = 0; i < pImpar.topo; i++) {
+        fprintf(fileImpar, "%d, ", pImpar.numeros[i].nImpares);
+    }
+}
+
 int main(int argc, char *argv[]) {
+    // Inicializando pilha
     PilhaPar pilhaPar;
     PilhaImpar pilhaImpar;
     iniciarPilha(&pilhaPar, &pilhaImpar);
 
-    FILE *entrada = op_file(NAME);
+    // Lendo dados do arqivo e armazenando nas pilhas
+    FILE *entrada = op_file(argv[1]);
     printf("Reading file...\n");
     if(rd_file(entrada, &pilhaPar, &pilhaImpar) == 0) {
         printf("File read successfully!\n");
     }
 
-    int tamI = tamanhoImpar(&pilhaImpar);
-    int tamP = tamanhoPar(&pilhaPar);
-    printf("Size of the odd stack: %d\n", tamI);
-    printf("Size of the even stack: %d\n", tamP);
-    imprimirPilha(pilhaPar, pilhaImpar);
+    FILE *pares = cr_file(argv[2]);
+    FILE *impares = cr_file(argv[3]);
 
-    removerPilhaPar(&pilhaPar);
-    removerPilhaImpar(&pilhaImpar);
+    while (1) {
+        printf("\n\n1 - Show stack of numbers\n2 - Remove numbers from stack\n3 - Show stack size\n4 - Save stack\n5 - Exit\n");
+        int option;
+        scanf("%d", &option);
+        switch (option) {
+        case 1:
+            imprimirPilha(pilhaPar, pilhaImpar);
+            break;
+        case 2:
+            removerPilha(&pilhaImpar, &pilhaPar);
+        case 3:
+            int tamI = tamanhoImpar(&pilhaImpar);
+            int tamP = tamanhoPar(&pilhaPar);
+            printf("Size of the odd stack: %d\n", tamI);
+            printf("Size of the even stack: %d\n", tamP);
+            break;
+        case 4:
+            printf("Saving files...\n");
+            sv_file(pares, impares, pilhaPar, pilhaImpar);
+            break;
+        case 5:
+            fclose(entrada);
+            fclose(pares);
+            fclose(impares);
 
-    imprimirPilha(pilhaPar, pilhaImpar);
-    tamI = tamanhoImpar(&pilhaImpar);
-    tamP = tamanhoPar(&pilhaPar);
-    printf("\nSize of the odd stack: %d\n", tamI);
-    printf("Size of the even stack: %d\n", tamP);
-
+            return 0;
+        default:
+            printf("Invalidat option\n");
+            break;
+        }
+    }
     return 0;
 }
