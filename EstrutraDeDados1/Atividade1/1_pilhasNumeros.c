@@ -16,9 +16,9 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define NAME "entradaEX01.txt"
-#define PARES "pares.txt"
-#define IMPARES "impares.txt"
+// #define NAME "entradaEX01.txt"
+// #define PARES "pares.txt"
+// #define IMPARES "impares.txt"
 
 #define N 10
 
@@ -95,8 +95,14 @@ int removerPilha(PilhaImpar *pImpar, PilhaPar *pPar) {
     printf("Remove from:\n1 - Odd stack\n2 - Even stack\n");
     scanf("%d", &option);
     if (option == 1) {
+        if (pImpar == NULL || pImpar->topo == 0) {
+            return 0;
+        }
         return pImpar->topo--;
     } else {
+        if (pPar == NULL || pPar->topo == 0) {
+            return 0;
+        }
         return pPar->topo--;
     }
 }
@@ -130,7 +136,7 @@ int rd_file(FILE *file, PilhaPar *pPar, PilhaImpar *pImpar) {
         }
     }
     if (pPar->topo != 0 && pImpar != 0) {
-        return 0;
+        return 1;
     }
 }
 
@@ -161,7 +167,7 @@ int main(int argc, char *argv[]) {
     // Lendo dados do arqivo e armazenando nas pilhas
     FILE *entrada = op_file(argv[1]);
     printf("Reading file...\n");
-    if(rd_file(entrada, &pilhaPar, &pilhaImpar) == 0) {
+    if(rd_file(entrada, &pilhaPar, &pilhaImpar) == 1) {
         printf("File read successfully!\n");
     }
 
