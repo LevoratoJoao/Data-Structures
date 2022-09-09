@@ -4,7 +4,7 @@
 typedef struct NoPilha *PonteiroNo; //Ponteiro para estrutura NoPilha
 
 typedef struct NoPilha {
-    int chave;
+    int chave; 
     PonteiroNo proximo;
 } NoPilha;
 
