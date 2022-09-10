@@ -1,14 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-
 typedef struct NoPilha *PonteiroNo; //Ponteiro para estrutura NoPilha
 
 typedef struct NoPilha {
-    int chave;
-    PonteiroNo proximo;
+    int chave; //Elemento
+    PonteiroNo proximo; //Ponteiro prox elemento
 } NoPilha;
 
 typedef struct {
@@ -47,9 +44,14 @@ void inserirPilha(PilhaDinamica *p, int n) {
 }
 
 void imprimirPilha(PilhaDinamica p) {
-    PonteiroNo i;
+    PonteiroNo i; //Variavel aux PonteiroNo
     printf("Elementos da pilha: { ");
-    for (i = p.topo; i != NULL; i = i->proximo) {
+    /** For de ponteiro:
+        - var aux recebe o topo da pilha
+        - enquanto for diferente de NULL printa valor
+        - aponta para proximo valor ate chegar no NULL
+    **/
+    for (i = p.topo; i != NULL; i = i->proximo) { 
         printf("%d, ", i->chave);
     }
     printf(" }\n");
@@ -71,17 +73,16 @@ void removerPilha(PilhaDinamica *p) {
 }
 
 void destruir(PilhaDinamica *p) {
-    while (p->topo != NULL) {
+    while (p->topo != NULL) { //Enquanto topo for diferente de NULL entra na funcao remover
         removerPilha(p);
     }
 }
 
-
 int calcularFibonacci(int numero) {
     if (numero == 1) {
-        return -1;
-    } else if (numero == 2) {
         return 0;
+    } else if (numero == 2) {
+        return 1;
     } else {
         return calcularFibonacci(numero - 1) + calcularFibonacci(numero - 2);
     }
@@ -89,31 +90,25 @@ int calcularFibonacci(int numero) {
 
 int main(void) {
     PilhaDinamica stack;
-
     iniciarPilha(&stack);
-
     int numero = 0;
+
     printf("Digite um numero entre 5 e 20: ");
-    while (numero < 5 || numero > 20) {
+    while (numero < 5 || numero > 20) { //Verificacao do numero
         scanf("%d", &numero);
     }
     for (int i = 1; i <= numero; i++) {
         inserirPilha(&stack, calcularFibonacci(i));
     }
     imprimirPilha(stack);
-
-    printf("A quantidade será %d\n", tamanhoPilha(stack));
-    removerPilha(&stack);
-
-    imprimirPilha(stack);
-
+    printf("Numero de elementos na pilha %d\n", tamanhoPilha(stack));
     destruir(&stack);
-
     if(estaVazia(stack) == 0) {
-        printf("está vazia");
+        printf("Pilha esta vazia\n");
     } else {
-        printf("não é vazia\n");
+        printf("Pilha contem elementos\n");
     }
 
+    //removerPilha(&stack);
     return 0;
 }

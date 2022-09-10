@@ -5,23 +5,24 @@
 
 #define N 3
 
+/** Informações:
+    S - Estrutura de dados
+    k - chave 
+    x - objeto que queremos inserir na estrutura
+**/
+
 typedef struct aluno {
     int ra;
     char nome[50];
 } Aluno;
 
 typedef struct pilha {
-    int topo;
-    Aluno alunos[N];
+    int topo; // Chave
+    Aluno alunos[N]; // Estrutura
 } Pilha;
 
-bool estaCheia(Pilha *pilha) {
-    if (pilha->topo == N) {
-        return true;
-    } else {
-        return false;
-    }
-}
+//////////////////////////////////////////////////
+// OPERACOES DE MODIFICAÇÃO //
 
 void iniciarPilha(Pilha *pilha) {
     pilha->topo = 0;
@@ -33,9 +34,30 @@ void inserir(Pilha *pilha, Aluno eu) {
         printf("\nPilha esta cheia\n");
         return;
     }
-    pilha->alunos[pilha->topo] = eu;
-    pilha->topo++;
+    pilha->alunos[pilha->topo] = eu; // Insercao do elemento na posicao do topo
+    pilha->topo++; // Incremento do topo para ir para proxima posicao
 }
+
+int removerPilha(Pilha *pilha) {
+    return pilha->topo--;
+}
+
+//Pesquisar...
+
+//////////////////////////////////////////////////
+// OPERACOES DE CONSULTA //
+
+bool estaCheia(Pilha *pilha) {
+    if (pilha->topo == N) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+//Esta vazia...
+
+//Topo...
 
 void imprimirPilha(Pilha pilha) {
     for (int i = 0; i < pilha.topo; i++)
@@ -44,13 +66,11 @@ void imprimirPilha(Pilha pilha) {
     }
 }
 
-int removerPilha(Pilha *pilha) {
-    return pilha->topo--;
-}
 
 int tamanho(Pilha *pilha) {
     return pilha->topo;
 }
+//////////////////////////////////////////////////
 
 int main() {
     Pilha pilha;

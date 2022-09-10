@@ -38,6 +38,7 @@ bool estaCheia(Pilha *paletes) {
 
 void iniciarPaletes(Pilha *locais) {
     locais->topo = NULL;
+    locais.locais[0 ... 4] = 0;
 }
 
 int localizarDisponivel(Pilha *locais) {
@@ -59,6 +60,7 @@ void inserirPaletes(Pilha *paletes) {
     }
     int local = localizarDisponivel(paletes);
     imprimirPaletes(paletes, &local);
+    paletes->locais[]
     paletes[local].topo++;
     printf("Dados atualizados...:\n");
     imprimirPaletes(paletes, &local);
