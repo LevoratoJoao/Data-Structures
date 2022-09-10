@@ -79,9 +79,9 @@ void destruir(PilhaDinamica *p) {
 
 int calcularFibonacci(int numero) {
     if (numero == 1) {
-        return 0;
+        return -1;
     } else if (numero == 2) {
-        return 1;
+        return 0;
     } else {
         return calcularFibonacci(numero - 1) + calcularFibonacci(numero - 2);
     }
