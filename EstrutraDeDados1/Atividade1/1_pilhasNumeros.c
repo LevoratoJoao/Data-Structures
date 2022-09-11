@@ -128,15 +128,15 @@ int rd_file(FILE *file, PilhaPar *pPar, PilhaImpar *pImpar) {
     int c;
     int n = 0;
     //(c = fgetc(file)) != EOF
-    while (1) {
+    while (1) { // Percorre o arquivo lendo ele
         fscanf(file, "%d", &c);
         inserir(pPar, pImpar, c);
-        if (feof(file)) {
+        if (feof(file)) { // acaba o loop ao final do arquivo
             break;
         }
     }
-    if (pPar->topo != 0 && pImpar != 0) {
-        return 1;
+    if (pPar->topo != 0 && pImpar->topo != 0) {
+        return 1; // Retorna 1 se os topos das pilhas forem diferentes de 0 (insercao deu certo)
     }
 }
 

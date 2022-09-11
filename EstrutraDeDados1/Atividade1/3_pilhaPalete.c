@@ -29,23 +29,25 @@ typedef struct paletes_st {
 } Pilha;
 
 bool estaCheia(Pilha *paletes) {
-    if (paletes->topo == MAX - 1) {
+    if (paletes->topo == MAX) {
         return true;
     } else {
         return false;
     }
 }
 
-void iniciarPaletes(Pilha *locais) {
-    locais->topo = NULL;
+void iniciarPaletes(Pilha *paletes) {
+    paletes->topo = NULL;
+    paletes.locais[0 ... 4] = 0;
 }
 
-int localizarDisponivel(Pilha *locais) {
-    int menorPilha = locais->topo; //Auxiliar para pilha mais baixa
+int localizarDisponivel(Pilha *paletes) {
+    int menorPilha = paletes->locais[0]; //Auxiliar para pilha mais baixa
     int localPilha = 0; //Posicao pilha mais baixa
+
     for (int i = 0; i < MAX; i++) {
-        if (locais->topo <= menorPilha) {
-            menorPilha = locais[i].topo;
+        if (paletes.locais[i] <= menorPilha) {
+            menorPilha = paletes->locais[i];
             localPilha = i;
         }
     }
@@ -59,21 +61,22 @@ void inserirPaletes(Pilha *paletes) {
     }
     int local = localizarDisponivel(paletes);
     imprimirPaletes(paletes, &local);
+    paletes.locais[local] = paletes.locais[local] + 1;
     paletes[local].topo++;
     printf("Dados atualizados...:\n");
-    imprimirPaletes(paletes, &local);
+    imprimirPaletes(paletes, local);
 }
 
-void imprimirPaletes(Pilha *paletes, int *local) {
-    printf("Local: %d - Quantidade: %d\n", local++, paletes[*local].topo);
+void imprimirPaletes(Pilha *paletes, int local) {
+    printf("Local: %d - Quantidade: %d\n", local++, paletes.locais[local]);
 }
 
 int localizarCheio(Pilha *paletes) {
-    int maiorPilha = paletes[0].locais; //Auxiliar para pilha com maior numero de paletes
+    int maiorPilha = paletes->locais[0]; //Auxiliar para pilha com maior numero de paletes
     int localPilha; //Posicao pilha com mais paletes
     for (int i = 0; i < MAX; i++) {
         if (paletes->locais[i] > maiorPilha) {
-            maiorPilha = paletes[i].locais[i];
+            maiorPilha = paletes->locais[i];
             localPilha = maiorPilha;
         }
     }
@@ -82,14 +85,15 @@ int localizarCheio(Pilha *paletes) {
 
 int removerPaletes(Pilha *paletes) {
     int local = localizarCheio(paletes);
-    imprimirPaletes(paletes, &local);
-    return paletes[local].topo--;
+    imprimirPaletes(paletes, local);
+    paletes.locais[local]--;
     printf("Dados atualizados...:\n");
-    imprimirPaletes(paletes, &local);
+    imprimirPaletes(paletes, local);
+    return paletes.locais[local];
 }
 
-int tamanho(Pilha *Paletes) {
-    return Paletes->topo;
+int tamanho(Pilha *paletes) {
+    return paletes->topo;
 }
 
 int main() {
