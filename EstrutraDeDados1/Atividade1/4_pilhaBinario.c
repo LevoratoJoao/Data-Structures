@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-
 typedef struct NoPilha *PonteiroNo; //Ponteiro para estrutura NoPilha
 
 typedef struct NoPilha {
@@ -49,6 +46,11 @@ void inserirPilha(PilhaDinamica *p, int n) {
 void imprimirPilha(PilhaDinamica p) {
     PonteiroNo i;
     printf("Elementos da pilha: { ");
+    /** For de ponteiro:
+        - var aux recebe o topo da pilha
+        - enquanto for diferente de NULL printa valor
+        - aponta para proximo valor ate chegar no NULL
+    **/
     for (i = p.topo; i != NULL; i = i->proximo) {
         printf("%d, ", i->chave);
     }
@@ -87,30 +89,22 @@ void converterBinario(PilhaDinamica *p, int numero) {
 
 int main(void) {
     PilhaDinamica stack;
-
     iniciarPilha(&stack);
-
     int numero = 0;
     printf("Digite um numero (nao negativo): ");
-    while (numero <= 0) {
+    while (numero <= 0) { // Verificacao do numero inserido
         scanf("%d", &numero);
     }
-    converterBinario(&stack, numero);
-
+    converterBinario(&stack, numero);//Funcao recursiva para converter binario
     imprimirPilha(stack);
-
-    printf("A quantidade será %d\n", tamanhoPilha(stack));
-    removerPilha(&stack);
-
-    imprimirPilha(stack);
-
+    printf("Numero de elementos na pilha %d\n", tamanhoPilha(stack));
     destruir(&stack);
-
     if(estaVazia(stack) == 0) {
-        printf("está vazia");
+        printf("Pilha esta vazia\n");
     } else {
-        printf("não é vazia\n");
+        printf("Pilha contem elementos\n");
     }
 
+    //removerPilha(&stack);
     return 0;
 }
