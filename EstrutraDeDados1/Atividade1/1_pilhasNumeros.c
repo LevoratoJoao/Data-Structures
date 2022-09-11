@@ -111,8 +111,8 @@ FILE *cr_file(char *name) {
 }
 
 FILE sv_file(FILE *file, PilhaNumeros pilha) {
-    for (int i = 0; i < pilha.topo; i++) {
-        fprintf(file, "%d, ", pilha.numeros[i]);
+    for (int i = pilha.topo; i > 0; i--) {
+        fprintf(file, "%d\n", pilha.numeros[i]);
     }
 }
 
