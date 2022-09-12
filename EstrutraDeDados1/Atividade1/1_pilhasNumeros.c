@@ -16,11 +16,11 @@
 #include <string.h>
 #include <stdbool.h>
 
-// #define NAME "entradaEX01.txt"
-// #define PARES "pares.txt"
-// #define IMPARES "impares.txt"
+#define NAME "entradaEX01.txt"
+#define PARES "pares.txt"
+#define IMPARES "impares.txt"
 
-#define N 10
+#define N 5
 
 typedef struct pilha {
     int topo;
@@ -44,17 +44,17 @@ void iniciarPilha(PilhaNumeros *pPar, PilhaNumeros *pImpar) {
 }
 
 void inserir(PilhaNumeros *pilha, int n) {
-    if (estaCheia(pPar) == true) {
+    if (estaCheia(pilha) == true) {
         printf("\nStack is full\n");
         return;
     }
-    pilha->numeros[pPar->topo] = n;
+    pilha->numeros[pilha->topo] = n;
     pilha->topo++;
 }
 
 void imprimirPilha(PilhaNumeros pilha) {
     for (int i = 0; i < pilha.topo; i++) {
-        printf("%d ", pPar.numeros[i]);
+        printf("%d ", pilha.numeros[i]);
     }
 
 }
@@ -82,7 +82,7 @@ FILE *op_file(char *name) {
     return file;
 }
 
-int rd_file(FILE *file, PilhaPar *pPar, PilhaImpar *pImpar) {
+int rd_file(FILE *file, PilhaNumeros *pPar, PilhaNumeros *pImpar) {
     int c;
     //(c = fgetc(file)) != EOF
     while (1) { // Percorre o arquivo lendo ele
@@ -111,7 +111,7 @@ FILE *cr_file(char *name) {
 }
 
 FILE sv_file(FILE *file, PilhaNumeros pilha) {
-    for (int i = pilha.topo; i > 0; i--) {
+    for (int i = pilha.topo - 1; i >= 0; i--) {
         fprintf(file, "%d\n", pilha.numeros[i]);
     }
 }
@@ -123,14 +123,14 @@ int main(int argc, char *argv[]) {
     iniciarPilha(&pilhaPar, &pilhaImpar);
 
     // Lendo dados do arqivo e armazenando nas pilhas
-    FILE *entrada = op_file(argv[1]);
+    FILE *entrada = op_file(NAME);
     printf("Reading file...\n");
     if(rd_file(entrada, &pilhaPar, &pilhaImpar) == 1) {
         printf("File read successfully!\n");
     }
     // Criando arquivos de saida
-    FILE *pares = cr_file(argv[2]);
-    FILE *impares = cr_file(argv[3]);
+    FILE *pares = cr_file(PARES);
+    FILE *impares = cr_file(IMPARES);
 
     // Menu com manipulacao da pilha
     while (1) {
@@ -141,10 +141,10 @@ int main(int argc, char *argv[]) {
         case 1: // Mostra pilha de numeros
             printf("Stack of even numbers: ");
             imprimirPilha(pilhaPar);
-            
+
             printf("\nStack of odd numbers: ");
             imprimirPilha(pilhaImpar);
-            
+
             break;
         case 2: // Remove elemento do topo da pilha
             printf("Remove from:\n1 - Odd stack\n2 - Even stack\n");
@@ -161,14 +161,14 @@ int main(int argc, char *argv[]) {
         case 3: // Tamanho das pilhas
             int tamI = tamanhoPilha(&pilhaImpar);
             int tamP = tamanhoPilha(&pilhaPar);
-        
+
             printf("Size of the odd stack: %d\n", tamI);
             printf("Size of the even stack: %d\n", tamP);
 
             break;
         case 4: // Salvar arquivos
             printf("Saving files...\n");
-            
+
             sv_file(pares, pilhaPar);
             sv_file(impares, pilhaImpar);
 
@@ -181,7 +181,7 @@ int main(int argc, char *argv[]) {
             return 0;
         default:
             printf("Invalidate option\n");
-            
+
             break;
         }
     }

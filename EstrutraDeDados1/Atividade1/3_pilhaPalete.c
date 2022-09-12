@@ -38,7 +38,10 @@ bool estaCheia(Pilha *paletes) {
 
 void iniciarPaletes(Pilha *paletes) {
     paletes->topo = NULL;
-    paletes.locais[0 ... 4] = 0;
+    for (int i = 0; i < MAX; i++)
+    {
+        paletes->locais[i] = 0;
+    }
 }
 
 int localizarDisponivel(Pilha *paletes) {
@@ -46,7 +49,7 @@ int localizarDisponivel(Pilha *paletes) {
     int localPilha = 0; //Posicao pilha mais baixa
 
     for (int i = 0; i < MAX; i++) {
-        if (paletes.locais[i] <= menorPilha) {
+        if (paletes->locais[i] <= menorPilha) {
             menorPilha = paletes->locais[i];
             localPilha = i;
         }
@@ -60,24 +63,24 @@ void inserirPaletes(Pilha *paletes) {
         return;
     }
     int local = localizarDisponivel(paletes);
-    imprimirPaletes(paletes, &local);
-    paletes.locais[local] = paletes.locais[local] + 1;
+    imprimirPaletes(paletes, local);
+    paletes->locais[local] = paletes->locais[local] + 1;
     paletes[local].topo++;
     printf("Dados atualizados...:\n");
     imprimirPaletes(paletes, local);
 }
 
 void imprimirPaletes(Pilha *paletes, int local) {
-    printf("Local: %d - Quantidade: %d\n", local++, paletes.locais[local]);
+    printf("Local: %d - Quantidade: %d\n", local, paletes->locais[local]);
 }
 
 int localizarCheio(Pilha *paletes) {
     int maiorPilha = paletes->locais[0]; //Auxiliar para pilha com maior numero de paletes
-    int localPilha; //Posicao pilha com mais paletes
+    int localPilha = 0; //Posicao pilha com mais paletes
     for (int i = 0; i < MAX; i++) {
         if (paletes->locais[i] > maiorPilha) {
             maiorPilha = paletes->locais[i];
-            localPilha = maiorPilha;
+            localPilha = i;
         }
     }
     return localPilha;
@@ -86,10 +89,10 @@ int localizarCheio(Pilha *paletes) {
 int removerPaletes(Pilha *paletes) {
     int local = localizarCheio(paletes);
     imprimirPaletes(paletes, local);
-    paletes.locais[local]--;
+    paletes->locais[local]--;
     printf("Dados atualizados...:\n");
     imprimirPaletes(paletes, local);
-    return paletes.locais[local];
+    return paletes->locais[local];
 }
 
 int tamanho(Pilha *paletes) {
@@ -122,5 +125,4 @@ int main() {
             break;
         }
     }
-    return 0;
 }
