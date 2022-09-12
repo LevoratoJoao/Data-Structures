@@ -78,6 +78,12 @@ void destruir(PilhaDinamica *p) {
     }
 }
 
+/**
+ * @brief Funcao que calcula o fibonacci do numero inserido
+ * 
+ * @param numero 
+ * @return int 
+ */
 int calcularFibonacci(int numero) {
     if (numero == 1) {
         return 0;

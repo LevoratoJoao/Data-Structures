@@ -2,7 +2,7 @@
  * @file 3_PaletesPalete.c
  * @author João Vitor Levorato de Souza (joaosouza.2021@alunos.utfpr.edu.br) // Arthur Petroli
  * @brief Um supermercado precisa implementar um programa para auxiliar a administracao de seu
- * estoque, onde diversos paletes s ̃ao empilhados. O equipamento permite empilhar no imo 4 paletes
+ * estoque, onde diversos paletes s ̃ao empilhados. O equipamento permite empilhar no maximo 4 paletes
  * em 5 locais. Elabore um programa em C implementando uma Pilha Estatica, com o seguinte menu de programa:
  * (a) Adicionar novo palete;
  * (b) Remover palete;
@@ -26,7 +26,7 @@
 
 typedef struct paletes_st {
     int topo;
-    int locais[MAXL];
+    int locais;
 } Pilha;
 
 bool estaCheia(Pilha *paletes) {
@@ -38,19 +38,20 @@ bool estaCheia(Pilha *paletes) {
 }
 
 void iniciarPaletes(Pilha *paletes) {
-    paletes->topo = NULL;
     for (int i = 0; i < MAXL; i++)
     {
-        paletes->locais[i] = 0;
+        paletes[i].topo = NULL;
+        paletes[i].locais = 0;
     }
 }
 
 int localizarDisponivel(Pilha *paletes) {
-    int menorPilha = paletes->locais[0]; //Auxiliar para pilha mais baixa
+    int menorPilha = paletes[0].locais; //Auxiliar para pilha mais baixa
     int localPilha = 0; //Posicao pilha mais baixa
+
     for (int i = 0; i < MAXL; i++) {
-        if (paletes->locais[i] <= menorPilha) {
-            menorPilha = paletes->locais[i];
+        if (paletes[i].locais <= menorPilha) {
+            menorPilha = paletes[i].locais;
             localPilha = i;
         }
     }
@@ -58,7 +59,7 @@ int localizarDisponivel(Pilha *paletes) {
 }
 
 void imprimirPaletes(Pilha *paletes, int local) {
-    printf("Local: %d - Quantidade: %d\n", local + 1, paletes->locais[local]);
+    printf("Local: %d - Quantidade: %d\n", local, paletes[local].locais);
 }
 
 void inserirPaletes(Pilha *paletes) {
@@ -67,26 +68,25 @@ void inserirPaletes(Pilha *paletes) {
         return;
     }
     int local = localizarDisponivel(paletes);
-    printf("Dados atuais do local:\n");
     imprimirPaletes(paletes, local);
-    if (paletes->locais[local] == MAXP) {
-        printf("\nLocal %d esta com maximo de paletes\n", local + 1);
+    if (paletes[local].locais == MAXP) {
+        printf("Local esta com maximo de paletes\n");
         return;
     } else {
-        paletes->locais[local] = paletes->locais[local] + 1;
-        paletes->topo++;
-        printf("\nDados atualizados...:\n");
+        paletes[local].locais = paletes[local].locais + 1;
+        paletes[local].topo++;
+        printf("Dados atualizados...:\n");
         imprimirPaletes(paletes, local);
     }
 }
 
 
 int localizarCheio(Pilha *paletes) {
-    int maiorPilha = paletes->locais[0]; //Auxiliar para pilha com maior numero de paletes
+    int maiorPilha = paletes[0].locais; //Auxiliar para pilha com maior numero de paletes
     int localPilha = 0; //Posicao pilha com mais paletes
     for (int i = 0; i < MAXL; i++) {
-        if (paletes->locais[i] > maiorPilha) {
-            maiorPilha = paletes->locais[i];
+        if (paletes[i].locais > maiorPilha) {
+            maiorPilha = paletes[i].locais;
             localPilha = i;
         }
     }
@@ -96,13 +96,13 @@ int localizarCheio(Pilha *paletes) {
 int removerPaletes(Pilha *paletes) {
     int local = localizarCheio(paletes);
     imprimirPaletes(paletes, local);
-    if (paletes->locais[local] == 0) {
-        printf("Local %d a esta vazio\n", local + 1);
+    if (paletes[local].locais == 0) {
+        printf("Local ja esta vazio\n");
     } else {
-        paletes->locais[local]--;
+        paletes[local].locais--;
         printf("Dados atualizados...:\n");
         imprimirPaletes(paletes, local);
-        return paletes->locais[local];
+        return paletes[local].locais;
     }
 }
 
@@ -111,21 +111,21 @@ int tamanho(Pilha *paletes) {
 }
 
 int main() {
-    Pilha locais;
-    iniciarPaletes(&locais);
+    Pilha locais[MAXL];
+    iniciarPaletes(locais);
 
     while (1)
     {
-        printf("\n(a) Adicionar novo palete\n(b) Remover palete\n(c) Sair\n");
+        printf("(a) Adicionar novo palete\n(b) Remover palete\n(c) Sair\n");
         char option;
         scanf("%s", &option);
         switch (option)
         {
         case 'a':
-            inserirPaletes(&locais);
+            inserirPaletes(locais);
             break;
         case 'b':
-            removerPaletes(&locais);
+            removerPaletes(locais);
             break;
         case 'c':
             return 0;

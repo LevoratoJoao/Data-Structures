@@ -104,7 +104,6 @@ int main(void) {
     } else {
         printf("Pilha contem elementos\n");
     }
-
     //removerPilha(&stack);
     return 0;
 }
