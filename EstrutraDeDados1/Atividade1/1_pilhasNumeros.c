@@ -1,8 +1,8 @@
 /**
  * @file 1_pilhasNumeros.c
- * @author João Vitor Levonumerosto de Souza (joaosouza.2021@Numeros.utfpr.edu.br)
- * @brief Implemente um prognumerosma com duas Pilhas Est ́aticas, uma que ter ́a apenas n ́umeros pares,
- * e a outnumeros apenas com n ́umeros  ́ımpares. O prognumerosma dever ́a ler um arquivo de entnumerosda contendo 10
+ * @author João Vitor Levorato de Souza (joaosouza.2021@alunos.utfpr.edu.br) / Arthur Henrique de Oliveira Petroli (arthurpetroli@alunos.utfpr.edu.br)
+ * @brief Implemente um programa com duas Pilhas Est ́aticas, uma que ter ́a apenas n ́umeros pares,
+ * e a outra apenas com n ́umeros  ́ımpares. O programa dever ́a ler um arquivo de entrada contendo 10
  * n ́umeros, e empilha-los corretamente. Ao final, imprima cada pilha em um arquivo de sa ́ıda pr ́oprio.
  * @version 0.1
  * @date 2022-09-06
@@ -10,15 +10,17 @@
  * @copyright Copyright (c) 2022
  *
  */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 
-#define NAME "entradaEX01.txt"
-#define PARES "pares.txt"
-#define IMPARES "impares.txt"
+/*
+    defines para testes e debugs:
+    #define NAME "entradaEX01.txt"
+    #define PARES "pares.txt"
+    #define IMPARES "impares.txt"
+*/
 
 #define N 5
 
@@ -30,6 +32,13 @@ typedef struct pilha {
 //////////////////////////////////////////////////////////
 // Funcoes para manipulacao da pilha:
 
+/**
+ * @brief Funcao que realiza a verificacao de se a pilha esta cheia
+ *
+ * @param pilha
+ * @return true
+ * @return false
+ */
 bool estaCheia(PilhaNumeros *pilha) {
     if (pilha->topo == N) {
         return true;
@@ -38,20 +47,37 @@ bool estaCheia(PilhaNumeros *pilha) {
     }
 }
 
+/**
+ * @brief Funcao que inicia a pilha zerando seus topos
+ *
+ * @param pPar
+ * @param pImpar
+ */
 void iniciarPilha(PilhaNumeros *pPar, PilhaNumeros *pImpar) {
     pPar->topo = 0;
     pImpar->topo = 0;
 }
 
+/**
+ * @brief Funcao para insercao de elementos dentro da pilha
+ *
+ * @param pilha
+ * @param n
+ */
 void inserir(PilhaNumeros *pilha, int n) {
-    if (estaCheia(pilha) == true) {
+    if (estaCheia(pilha) == true) { // Condicao para pilha cheia
         printf("\nStack is full\n");
         return;
     }
-    pilha->numeros[pilha->topo] = n;
-    pilha->topo++;
+    pilha->numeros[pilha->topo] = n; // insercao em relacao ao topo
+    pilha->topo++; // incremento do topo
 }
 
+/**
+ * @brief Funcao para impressao dos elementos da pilha
+ *
+ * @param pilha
+ */
 void imprimirPilha(PilhaNumeros pilha) {
     for (int i = 0; i < pilha.topo; i++) {
         printf("%d ", pilha.numeros[i]);
@@ -59,6 +85,12 @@ void imprimirPilha(PilhaNumeros pilha) {
 
 }
 
+/**
+ * @brief Funcao para remocao de um elemento da pilha
+ *
+ * @param pilha
+ * @return int
+ */
 int removerPilha(PilhaNumeros *pilha) {
     if (pilha == NULL || pilha->topo == 0) {
         return 0;
@@ -66,6 +98,12 @@ int removerPilha(PilhaNumeros *pilha) {
     return pilha->topo--;
 }
 
+/**
+ * @brief
+ *
+ * @param pilha
+ * @return int
+ */
 int tamanhoPilha(PilhaNumeros *pilha) {
     return pilha->topo;
 }
@@ -73,6 +111,12 @@ int tamanhoPilha(PilhaNumeros *pilha) {
 //////////////////////////////////////////////////////////
 // Funcoes para manipulacao do arquivo de entrada e saida:
 
+/**
+ * @brief Open file - funcao para abrir arquivo com nome passado por parametro em formato de leitura (read)
+ *
+ * @param name
+ * @return FILE*
+ */
 FILE *op_file(char *name) {
     FILE *file = fopen(name, "r");
     if (file == NULL) {
@@ -82,12 +126,20 @@ FILE *op_file(char *name) {
     return file;
 }
 
+/**
+ * @brief Read file - funcao para ler arquivo e armazenar seus dados em uma variavel
+ *
+ * @param file
+ * @param pPar
+ * @param pImpar
+ * @return int
+ */
 int rd_file(FILE *file, PilhaNumeros *pPar, PilhaNumeros *pImpar) {
     int c;
     //(c = fgetc(file)) != EOF
-    while (1) { // Percorre o arquivo lendo ele
+    while (1) { // Loopp que percorre o arquivo lendo ele
         fscanf(file, "%d", &c);
-        if (c % 2 == 0) {
+        if (c % 2 == 0) { // Verificacao de numero par/impar
             inserir(pPar, c);
         } else {
             inserir(pImpar, c);
@@ -101,6 +153,12 @@ int rd_file(FILE *file, PilhaNumeros *pPar, PilhaNumeros *pImpar) {
     }
 }
 
+/**
+ * @brief Create file - funcao para criar arquivos com o nome que foi passado por parametro
+ *
+ * @param name
+ * @return FILE*
+ */
 FILE *cr_file(char *name) {
     FILE *file = fopen(name, "w+");
     if (file == NULL) {
@@ -110,6 +168,13 @@ FILE *cr_file(char *name) {
     return file;
 }
 
+/**
+ * @brief Save file - funcao para salvar as informacoes da variavel no arquivo
+ *
+ * @param file
+ * @param pilha
+ * @return FILE
+ */
 FILE sv_file(FILE *file, PilhaNumeros pilha) {
     for (int i = pilha.topo - 1; i >= 0; i--) {
         fprintf(file, "%d\n", pilha.numeros[i]);
@@ -123,14 +188,14 @@ int main(int argc, char *argv[]) {
     iniciarPilha(&pilhaPar, &pilhaImpar);
 
     // Lendo dados do arqivo e armazenando nas pilhas
-    FILE *entrada = op_file(NAME);
+    FILE *entrada = op_file(argv[1]);
     printf("Reading file...\n");
     if(rd_file(entrada, &pilhaPar, &pilhaImpar) == 1) {
         printf("File read successfully!\n");
     }
     // Criando arquivos de saida
-    FILE *pares = cr_file(PARES);
-    FILE *impares = cr_file(IMPARES);
+    FILE *pares = cr_file(argv[2]);
+    FILE *impares = cr_file(argv[3]);
 
     // Menu com manipulacao da pilha
     while (1) {
