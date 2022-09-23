@@ -57,7 +57,7 @@ void iniciaFila(FilaEstatica *fila) {
 
 //Atribui elemento indicado pelo fim
 // incrementa o fim
-void inserirFilaEstaticaEstatica(FilaEstatica *fila, int n) {
+void inserirFilaEstatica(FilaEstatica *fila, int n) {
     if (estaCheia(fila)) {
         printf("Fila esta cheia\n");
         return;
