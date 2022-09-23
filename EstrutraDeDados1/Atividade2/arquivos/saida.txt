@@ -1,0 +1,11 @@
+{ 167; Mirian Thest; Rua Rio de Janeiro; 30 }
+{ 169; Jorge Silva; Rua Rio de Janeiro; 100 }
+{ 171; Manoel Richya; Rua Rio de Janeiro; 130 }
+{ 113; Rafael da Silva Mendes; Rua SÃ£o Paulo; 10 }
+{ 115; Luana Mendes; Rua SÃ£o Paulo; 15 }
+{ 10; ; ÷ÿ; 32767 }
+{ 16777216; ; ; 1431656975 }
+{ 0; ÿ; ; -134225184 }
+{ -7973; ÿ; ; -7652 }
+{ -5721; ÿ; ; -4348 }
+Meta 10 visitas efetuada

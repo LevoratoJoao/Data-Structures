@@ -79,7 +79,6 @@ void destruirFila(FilaDinamica *fila) {
     while (fila->quantidade != 0) {
         removerFilaDinamica(fila);
     }
-
 }
 
 int main() {
