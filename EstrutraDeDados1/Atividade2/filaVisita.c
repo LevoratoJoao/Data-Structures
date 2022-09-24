@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define TAM 11
-//#define NAME "arquivos/visita.txt"
-//#define SAIDA "arquivos/saida.txt"
+#define TAM 10
+#define NAME "arquivos/visita.txt"
+#define SAIDA "arquivos/saida.txt"
 
 typedef struct ListaVisita
 {
@@ -36,7 +36,7 @@ int estaVaziaEstatica(FilaEstatica *fila) {
 }
 
 int estaCheiaEstatica(FilaEstatica *fila) {
-    return (fila->quantidade == TAM - 1);
+    return (fila->quantidade == TAM);
 }
 
 int tamanhoFilaEstatica(FilaEstatica *fila) {
@@ -161,8 +161,8 @@ FILE *cr_file(char *name) {
     return file;
 }
 
-FILE sv_file(FILE *file, FilaDinamica fila) {
-    for (PtrNoFila i = fila.inicio; i != NULL; i = i->proximo) {
+FILE sv_file(FILE *file, FilaDinamica *fila) {
+    for (PtrNoFila i = fila->inicio; i != NULL; i = i->proximo) {
         fprintf(file, "{ %d; %s; %s; %d }\n", i->conteudo.id, i->conteudo.proprietario, i->conteudo.endereco, i->conteudo.nCasa);
     }
 }
@@ -170,109 +170,86 @@ FILE sv_file(FILE *file, FilaDinamica fila) {
 int rd_file(FILE *file, FilaEstatica *fila) {
     Visita n;
     char aux[100];
-
     if (fgets(aux, 100, file) == NULL) { // acaba o loop ao final do arquivo
         return 1;
     } else {
         sscanf(aux, "{ %d; %[^;]; %[^;]; %d }\n", &n.id, &n.proprietario, &n.endereco, &n.nCasa);
+        inserirFilaEstatica(fila, n);
     }
-
-    inserirFilaEstatica(fila, n);
     return 0;
 }
 
-// int menu(FilaEstatica *filaVisita, FilaDinamica *filaConcretizadas, FilaDinamica *filaNConcretizadas, FILE *entrada) {
-//     char aux[100];
-//     Visita auxVisita;
-
-//     while (1) {
-//         if (fgets(aux, 100, entrada) != NULL) {
-//             int n = 0;
-//             sscanf(aux, "{ %d; %[^;]; %[^;]; %d }\n", &auxVisita.id, &auxVisita.proprietario, &auxVisita.endereco, &auxVisita.nCasa);
-//             inserirFilaEstatica(filaVisita, auxVisita);
-//             for (int i = 0; i < tamanhoFilaEstatica(filaVisita); i++) {
-//                 printf("Casa atual = { %d; %s; %s; %d }\n", filaVisita->vetor[(filaVisita->inicio + i) % TAM].id, filaVisita->vetor[(filaVisita->inicio + i) % TAM].proprietario, filaVisita->vetor[(filaVisita->inicio + i) % TAM].endereco, filaVisita->vetor[(filaVisita->inicio + i) % TAM].nCasa);
-//                 printf("[1] Visita concretizaa\n[2] Visita nao concretizada\n");
-//                 while(n != 2 && n != 1) {
-//                     setbuf(stdin, NULL);
-//                     scanf("%d", &n);
-//                 }
-//                 if (n == 1) {
-//                     inserirFilaDinamica(filaConcretizadas, filaVisita->vetor[i]);
-//                     if (tamanhoFilaDinamica(filaConcretizadas) == 10) {
-//                         return 0;
-//                     }
-//                 } else {
-//                     inserirFilaDinamica(filaNConcretizadas, filaVisita->vetor[i]);
-//                     removerFilaEstatica(filaVisita);
-//                     i = tamanhoFilaEstatica(filaVisita);
-//                 }
-//             }
-//         } else {
-//             return 1;
-//         }
-//     }
-// }
-
-int main(int argc, char *argv[]) {
-    //Arquivos
-    FILE *entrada = op_file(argv[1]);
-    FILE *saida = cr_file(argv[2]);
-    char aux[100];
-    //Var filas
-    FilaEstatica filaVisita;
-    FilaDinamica filaConcretizadas;
-    FilaDinamica filaNConcretizadas;
-
-    iniciaFilaEstatica(&filaVisita);
-    iniciaFilaDinamica(&filaConcretizadas);
-    iniciaFilaDinamica(&filaNConcretizadas);
-
-    //Carregando os dados do arquivo
-    for (int i = 0; i < TAM; i++)
-    {
-        rd_file(entrada, &filaVisita);
-    }
-
+int menu(FilaEstatica *filaVisita, FilaDinamica *filaConcretizadas, FilaDinamica *filaNConcretizadas, FILE *entrada, FILE *saida) {
     int i = 0;
     while(1) {
         int n = 0;
-        printf("\nCasa atual = { %d; %s; %s; %d }\n", filaVisita.vetor[(i + filaVisita.inicio) % TAM].id, filaVisita.vetor[(i + filaVisita.inicio) % TAM].proprietario, filaVisita.vetor[(i + filaVisita.inicio) % TAM].endereco, filaVisita.vetor[(i + filaVisita.inicio) % TAM].nCasa);
+        printf("\nCasa atual = { %d; %s; %s; %d }\n", filaVisita->vetor[(filaVisita->inicio + i) % TAM].id, filaVisita->vetor[(i + filaVisita->inicio) % TAM].proprietario, filaVisita->vetor[(filaVisita->inicio + i) % TAM].endereco, filaVisita->vetor[(i + filaVisita->inicio) % TAM].nCasa);
         printf("[1] Visita concretizaa\n[2] Visita nao concretizada\n");
         while(n != 2 && n != 1) {
             setbuf(stdin, NULL);
             scanf("%d", &n);
         }
         if (n == 1) {
-            inserirFilaDinamica(&filaConcretizadas, filaVisita.vetor[i]);
-            printf("\n\nFila concretizada:\n");
-            if (tamanhoFilaDinamica(&filaConcretizadas) == 10) {
-                printf("Atencao: 10 visitas foram concretizadas!\n");
-                sv_file(saida, filaConcretizadas);
-                fprintf(saida, "Meta 10 visitas efetuada\n");
-
-                destruirFila(&filaConcretizadas);
-                destruirFila(&filaNConcretizadas);
-
-                fclose(entrada);
-                fclose(saida);
-
+            inserirFilaDinamica(filaConcretizadas, filaVisita->vetor[(filaVisita->inicio + i) % TAM]);
+            removerFilaEstatica(filaVisita);
+            if (tamanhoFilaDinamica(filaConcretizadas) == TAM) {
                 return 0;
             }
         } else {
-            inserirFilaDinamica(&filaNConcretizadas, filaVisita.vetor[(filaVisita.inicio + i) % TAM]);
-            removerFilaEstatica(&filaVisita);
-            rd_file(entrada, &filaVisita);
-            if (estaVaziaEstatica(&filaVisita))
-            {
-                printf("Atencao: todas as casas foram visitadas!\n");
-                sv_file(saida, filaNConcretizadas);
-                fprintf(saida, "Meta de 10 visitas nao foi efetuada\n");
-
-                return 0;
+            inserirFilaDinamica(filaNConcretizadas, filaVisita->vetor[(filaVisita->inicio + i) % TAM]);
+            removerFilaEstatica(filaVisita);
+            rd_file(entrada, filaVisita);
+            if (estaVaziaEstatica(filaVisita)) {
+                return 1;
             }
-
         }
+    }
+}
+
+int main(int argc, char *argv[]) {
+    //Arquivos
+    FILE *entrada = op_file(NAME);
+    FILE *saida = cr_file(SAIDA);
+    char aux[100];
+    //Var filas
+    FilaEstatica filaVisita;
+    FilaDinamica filaConcretizadas;
+    FilaDinamica filaNConcretizadas;
+    //Inicializando filas
+    iniciaFilaEstatica(&filaVisita);
+    iniciaFilaDinamica(&filaConcretizadas);
+    iniciaFilaDinamica(&filaNConcretizadas);
+
+    //Carregando os dados do arquivo
+    for (int i = 0; i < TAM; i++) {
+        rd_file(entrada, &filaVisita);
+    }
+    if (menu(&filaVisita, &filaConcretizadas, &filaNConcretizadas, entrada, saida)) {
+        printf("Atencao: todas as casas foram visitadas!\n");
+        fprintf(saida, "Visitas concretizadas:\n");
+        sv_file(saida, &filaConcretizadas);
+        fprintf(saida, "Visitas nao concretizadas:\n");
+        sv_file(saida, &filaNConcretizadas);
+        fprintf(saida, "Meta de 10 visitas nao foi efetuada\n");
+
+        destruirFila(&filaConcretizadas);
+        destruirFila(&filaNConcretizadas);
+
+        fclose(entrada);
+        fclose(saida);
+    } else {
+        printf("Atencao: 10 visitas foram concretizadas!\n");
+        fprintf(saida, "Visitas concretizadas:\n");
+        sv_file(saida, &filaConcretizadas);
+        fprintf(saida, "Visitas nao concretizadas:\n");
+        sv_file(saida, &filaNConcretizadas);
+        fprintf(saida, "Meta 10 visitas efetuada\n");
+
+        destruirFila(&filaConcretizadas);
+        destruirFila(&filaNConcretizadas);
+
+        fclose(entrada);
+        fclose(saida);
     }
     return 0;
 }
