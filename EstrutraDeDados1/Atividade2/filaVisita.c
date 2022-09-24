@@ -3,8 +3,8 @@
 #include <string.h>
 
 #define TAM 11
-#define NAME "arquivos/visita.txt"
-#define SAIDA "arquivos/saida.txt"
+//#define NAME "arquivos/visita.txt"
+//#define SAIDA "arquivos/saida.txt"
 
 typedef struct ListaVisita
 {
@@ -171,12 +171,11 @@ int rd_file(FILE *file, FilaEstatica *fila) {
     Visita n;
     char aux[100];
 
-    if (feof(file)) { // acaba o loop ao final do arquivo
+    if (fgets(aux, 100, file) == NULL) { // acaba o loop ao final do arquivo
         return 1;
+    } else {
+        sscanf(aux, "{ %d; %[^;]; %[^;]; %d }\n", &n.id, &n.proprietario, &n.endereco, &n.nCasa);
     }
-    fgets(aux, 100, file);
-    sscanf(aux, "{ %d; %[^;]; %[^;]; %d }\n", &n.id, &n.proprietario, &n.endereco, &n.nCasa);
-    //fscanf(file, "%[^;]; %[^;]; %[^;]; %d\n", &n.id, &n.proprietario, &n.endereco, &n.nCasa);
 
     inserirFilaEstatica(fila, n);
     return 0;
@@ -217,8 +216,8 @@ int rd_file(FILE *file, FilaEstatica *fila) {
 
 int main(int argc, char *argv[]) {
     //Arquivos
-    FILE *entrada = op_file(NAME);
-    FILE *saida = cr_file(SAIDA);
+    FILE *entrada = op_file(argv[1]);
+    FILE *saida = cr_file(argv[2]);
     char aux[100];
     //Var filas
     FilaEstatica filaVisita;
@@ -238,8 +237,7 @@ int main(int argc, char *argv[]) {
     int i = 0;
     while(1) {
         int n = 0;
-        printf("Casa atual = { %d; %s; %s; %d }\n", filaVisita.vetor[(i + filaVisita.inicio) % TAM].id, filaVisita.vetor[(i + filaVisita.inicio) % TAM].proprietario, filaVisita.vetor[(i + filaVisita.inicio) % TAM].endereco, filaVisita.vetor[(i + filaVisita.inicio) % TAM].nCasa);
-
+        printf("\nCasa atual = { %d; %s; %s; %d }\n", filaVisita.vetor[(i + filaVisita.inicio) % TAM].id, filaVisita.vetor[(i + filaVisita.inicio) % TAM].proprietario, filaVisita.vetor[(i + filaVisita.inicio) % TAM].endereco, filaVisita.vetor[(i + filaVisita.inicio) % TAM].nCasa);
         printf("[1] Visita concretizaa\n[2] Visita nao concretizada\n");
         while(n != 2 && n != 1) {
             setbuf(stdin, NULL);
@@ -247,6 +245,7 @@ int main(int argc, char *argv[]) {
         }
         if (n == 1) {
             inserirFilaDinamica(&filaConcretizadas, filaVisita.vetor[i]);
+            printf("\n\nFila concretizada:\n");
             if (tamanhoFilaDinamica(&filaConcretizadas) == 10) {
                 printf("Atencao: 10 visitas foram concretizadas!\n");
                 sv_file(saida, filaConcretizadas);
@@ -264,7 +263,7 @@ int main(int argc, char *argv[]) {
             inserirFilaDinamica(&filaNConcretizadas, filaVisita.vetor[(filaVisita.inicio + i) % TAM]);
             removerFilaEstatica(&filaVisita);
             rd_file(entrada, &filaVisita);
-            if (feof(entrada))
+            if (estaVaziaEstatica(&filaVisita))
             {
                 printf("Atencao: todas as casas foram visitadas!\n");
                 sv_file(saida, filaNConcretizadas);
@@ -274,15 +273,6 @@ int main(int argc, char *argv[]) {
             }
 
         }
-        i++;
     }
-
-    // if (fgets(aux, 100, entrada) == NULL)
-    // {
-    //     printf("Atencao: todas as casas foram visitadas!\n");
-    //     sv_file(saida, filaNConcretizadas);
-    //     fprintf(saida, "Meta de 10 visitas nao foi efetuada\n");
-    // }
-
     return 0;
 }
