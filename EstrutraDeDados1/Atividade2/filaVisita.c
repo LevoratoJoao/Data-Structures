@@ -3,8 +3,8 @@
 #include <string.h>
 
 #define TAM 10
-#define NAME "arquivos/visita.txt"
-#define SAIDA "arquivos/saida.txt"
+//#define NAME "arquivos/visita.txt"
+//#define SAIDA "arquivos/saida.txt"
 
 typedef struct ListaVisita
 {

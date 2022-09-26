@@ -51,6 +51,20 @@ void emOrdem(NoArvore **arvore) {
     emOrdem(&(*arvore)->direita);
 }
 
+int pesquisaArvore(NoArvore **arvore, int n) {
+    if (estaVazia((*arvore))) {
+        return 0;
+    }
+    if ((*arvore)->chave == n) {
+        return 1;
+    }
+    if (n > (*arvore)->chave) {
+        return (pesquisaArvore(&(*arvore)->direita, n));
+    } else {
+        return (pesquisaArvore(&(*arvore)->esquerda, n));
+    }
+}
+
 int inserirArvore(NoArvore **arvore, int n) {
     if (estaVazia((*arvore))) {
         //Nova arvore
@@ -67,6 +81,15 @@ int inserirArvore(NoArvore **arvore, int n) {
         return (inserirArvore(&(*arvore)->direita, n));
     } else {
         return (inserirArvore(&(*arvore)->esquerda, n));
+    }
+}
+
+void destroiArvore(NoArvore **arvore) {
+    if (!estaVazia((*arvore))) {
+        destroiArvore(&(*arvore)->esquerda);
+        destroiArvore(&(*arvore)->direita);
+        free(*arvore);
+        *arvore = NULL;
     }
 }
 
@@ -96,5 +119,20 @@ int main() {
     printf("Em Ordem: { ");
     emOrdem(&raiz);
     printf("}\n");
+    printf("Pesquisa:\n");
+    int vetor[5] = {3, 2, 8, 7, 1};
+    for (int i = 0; i < 5; i++) {
+        if (pesquisaArvore(&raiz, vetor[i])) {
+            printf("Numero %d presente na arvore\n", vetor[i]);
+        } else {
+            printf("Nao achou\n");
+        }
+    }
+    printf("Queimando arvore...\n");
+    destroiArvore(&raiz);
+    if (estaVazia(raiz)) {
+        printf("Arvore cortada\n");
+    }
+
     return EXIT_SUCCESS;
 }
