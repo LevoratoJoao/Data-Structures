@@ -84,6 +84,45 @@ int inserirArvore(NoArvore **arvore, int n) {
     }
 }
 
+NoArvore *getMaxAux(NoArvore **arvore) {
+    NoArvore *ret;
+    if ((*arvore)->direita == NULL) {
+        ret = (*arvore);
+        (*arvore) = (*arvore)->esquerda;
+        return(ret);
+    }
+    return getMaxAux(&(*arvore)->direita);
+}
+
+int removeArvore(NoArvore **arvore, int n) {
+    if (estaVazia((*arvore))) {
+        return 0;
+    }
+    if ((*arvore)->chave == n) {
+        NoArvore *tmp = (*arvore);
+        if ((*arvore)->esquerda == NULL && (*arvore)->direita != NULL) { //Caso 1 - tem subarvore na direita
+            (*arvore) = (*arvore)->direita;
+        } else if ((*arvore)->esquerda == NULL && (*arvore)->direita == NULL) { //Caso 2 - nao tem subarvore na direita e esquerda
+            (*arvore) = NULL;
+        } else if ((*arvore)->direita == NULL && (*arvore)->esquerda != NULL) { //Caso 3 - tem subarvore esquerda
+            (*arvore) = (*arvore)->esquerda;
+        } else {
+            //recebe no que vai ser apagado
+            tmp = getMaxAux(&(*arvore)->esquerda); //Pega valor maximo da subArvore da esquerda
+            (*arvore)->chave = tmp->chave;
+        }
+        printf("Elemento removido\n");
+        free(tmp);
+        return 1;
+    }
+    if (n > (*arvore)->chave) {
+        return (removeArvore(&(*arvore)->direita, n));
+    } else {
+        return (removeArvore(&(*arvore)->esquerda, n));
+    }
+    return 1;
+}
+
 void destroiArvore(NoArvore **arvore) {
     if (!estaVazia((*arvore))) {
         destroiArvore(&(*arvore)->esquerda);
@@ -128,11 +167,36 @@ int main() {
             printf("Nao achou\n");
         }
     }
-    printf("Queimando arvore...\n");
-    destroiArvore(&raiz);
     if (estaVazia(raiz)) {
         printf("Arvore cortada\n");
     }
+    removeArvore(&raiz, 9);
+    printf("Em Ordem: { ");
+    emOrdem(&raiz);
+    printf("}\n");
+    removeArvore(&raiz, 2);
+    printf("Em Ordem: { ");
+    emOrdem(&raiz);
+    printf("}\n");
+    removeArvore(&raiz, 6);
+    printf("Em Ordem: { ");
+    emOrdem(&raiz);
+    printf("}\n");
+    removeArvore(&raiz, 4);
+    printf("Em Ordem: { ");
+    emOrdem(&raiz);
+    printf("}\n");
+    removeArvore(&raiz, 7);
+    printf("Em Ordem: { ");
+    emOrdem(&raiz);
+    printf("}\n");
+    removeArvore(&raiz, 5);
+    printf("Em Ordem: { ");
+    emOrdem(&raiz);
+    printf("}\n");
+
+    printf("Queimando arvore...\n");
+    destroiArvore(&raiz);
 
     return EXIT_SUCCESS;
 }
