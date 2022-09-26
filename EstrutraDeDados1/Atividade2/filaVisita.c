@@ -341,12 +341,6 @@ int main(int argc, char *argv[]) {
         fprintf(saida, "Visitas nao concretizadas:\n");
         sv_file(saida, &filaNConcretizadas);
         fprintf(saida, "Meta de 10 visitas nao foi efetuada\n");
-        //Destruicao das filas dinamicas com memoria alocada
-        destruirFila(&filaConcretizadas);
-        destruirFila(&filaNConcretizadas);
-        //Fechando arquivos
-        fclose(entrada);
-        fclose(saida);
     } else { //10 visitas concretizadas
         //Imprimindo informacoes no arquivo de saida
         printf("Atencao: 10 visitas foram concretizadas!\n");
@@ -355,12 +349,13 @@ int main(int argc, char *argv[]) {
         fprintf(saida, "Visitas nao concretizadas:\n");
         sv_file(saida, &filaNConcretizadas);
         fprintf(saida, "Meta 10 visitas efetuada\n");
-        //Destruicao das filas dinamicas com memoria alocada
-        destruirFila(&filaConcretizadas);
-        destruirFila(&filaNConcretizadas);
-        //Fechando arquivos
-        fclose(entrada);
-        fclose(saida);
     }
+    //Destruicao das filas dinamicas com memoria alocada
+    destruirFila(&filaConcretizadas);
+    destruirFila(&filaNConcretizadas);
+    //Fechando arquivos
+    fclose(entrada);
+    fclose(saida);
+    
     return EXIT_SUCCESS;
 }
