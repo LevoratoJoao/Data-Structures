@@ -94,6 +94,16 @@ NoArvore *getMaxAux(NoArvore **arvore) {
     return getMaxAux(&(*arvore)->direita);
 }
 
+NoArvore *getMinAux(NoArvore **arvore) {
+    NoArvore *ret;
+    if ((*arvore)->esquerda == NULL) {
+        ret = (*arvore);
+        (*arvore) = (*arvore)->direita;
+        return(ret);
+    }
+    return getMinAux(&(*arvore)->esquerda);
+}
+
 int removeArvore(NoArvore **arvore, int n) {
     if (estaVazia((*arvore))) {
         return 0;
@@ -108,7 +118,7 @@ int removeArvore(NoArvore **arvore, int n) {
             (*arvore) = (*arvore)->esquerda;
         } else {
             //recebe no que vai ser apagado
-            tmp = getMaxAux(&(*arvore)->esquerda); //Pega valor maximo da subArvore da esquerda
+            tmp = getMinAux(&(*arvore)->esquerda); //Pega valor maximo da subArvore da esquerda
             (*arvore)->chave = tmp->chave;
         }
         printf("Elemento removido\n");
@@ -138,14 +148,12 @@ int main() {
     if (estaVazia(raiz)) {
         printf("Arvore esta vazia\n");
     }
-    inserirArvore(&raiz, 6);
+    inserirArvore(&raiz, 12);
     inserirArvore(&raiz, 4);
-    inserirArvore(&raiz, 9);
-    inserirArvore(&raiz, 5);
-    inserirArvore(&raiz, 7);
-    inserirArvore(&raiz, 8);
     inserirArvore(&raiz, 2);
-    inserirArvore(&raiz, 3);
+    inserirArvore(&raiz, 8);
+    inserirArvore(&raiz, 6);
+    inserirArvore(&raiz, 16);
     if (!estaVazia(raiz)) {
         printf("Arvore nao esta vazia\n");
     }
