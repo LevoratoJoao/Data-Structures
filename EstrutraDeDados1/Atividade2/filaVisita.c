@@ -320,7 +320,6 @@ int main(int argc, char *argv[]) {
     //Arquivos
     FILE *entrada = op_file(argv[1]);
     FILE *saida = cr_file(argv[2]);
-    char aux[100];
     //Var filas
     FilaEstatica filaVisita;
     FilaDinamica filaConcretizadas;
@@ -356,6 +355,6 @@ int main(int argc, char *argv[]) {
     //Fechando arquivos
     fclose(entrada);
     fclose(saida);
-    
+
     return EXIT_SUCCESS;
 }
