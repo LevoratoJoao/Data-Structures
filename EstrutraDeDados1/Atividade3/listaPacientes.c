@@ -38,7 +38,6 @@ typedef struct data {
     int ano;
 } Data;
 
-
 typedef struct pacientes_st{
     char nome[100];
     char sexo;
@@ -136,14 +135,57 @@ FILE *cr_file(char *name) {
     return file;
 }
 
+/**
+void lerArquivo(FILE *fp, Pacientes *obj){ //lê uma linha a cada chamada
+    char linha[100];
+    char* palavra;
+    static int i=0;
+
+   
+   if (!feof(fp) && !fgets(linha, 100, fp))  {      //Se não for final de arquivo e a leitura da linha foi feita com sucesso
+        printf("\n\nNao foi possível ler a linha");
+        return;
+    }
+    
+    //----- id
+    palavra= strtok(linha,"<>,\n"); //como separador de informação temos os caracteres: {};\n
+    strcpy(obj->lixo, palavra);
+
+    palavra= strtok(NULL,"<>,\n"); //como separador de informação temos os caracteres: {};\n
+    strcpy(obj->nome, palavra);
+
+    //----- nome
+    palavra= strtok(NULL,"<>, \n"); //como separador de informação temos os caracteres: {};\n
+    strcpy(obj->sexo, palavra);
+
+    //----- endereco
+    palavra= strtok(linha,"<>, /");  //como separador de informação temos os caracteres: {};\n
+    obj->nascimento.dia = atol (palavra);    
+    palavra= strtok(linha,"<>, /");  //como separador de informação temos os caracteres: {};\n
+    obj->nascimento.mes = atol (palavra);  
+    palavra= strtok(linha,"<>, /");  //como separador de informação temos os caracteres: {};\n
+    obj->nascimento.ano = atol (palavra);
+
+    palavra= strtok(linha,"<>, /");  //como separador de informação temos os caracteres: {};\n
+    obj->ultimaConsulta.dia = atol (palavra);    
+    palavra= strtok(linha,"<>, /");  //como separador de informação temos os caracteres: {};\n
+    obj->ultimaConsulta.mes = atol (palavra);  
+    palavra= strtok(linha,"<>, /\n");  //como separador de informação temos os caracteres: {};\n
+    obj->ultimaConsulta.ano = atol (palavra);  
+    
+    printf("%s, %c, %d/%d/%d, %d/%d/%d\n", obj->nome, obj->sexo, obj->nascimento.dia, obj->nascimento.mes, obj->nascimento.ano, obj->ultimaConsulta.dia, obj->ultimaConsulta.mes, obj->ultimaConsulta.ano);
+}
+**/
+
 void rd_file(FILE *file, Lista *lista) {
     Pacientes n; //Objeto auxiliar
     char aux[100]; //Variavel de leitura auxiliar
     if (fgets(aux, 100, file) == NULL) { // acaba o loop ao final do arquivo
         return;
     } else {
-        sscanf(aux, "< %d; %[^;]; %[^;]; %d >\n", &n.nome, &n.sexo, &n.nascimento.dia, &n.nascimento.mes, &n.nascimento.ano, &n.nascimento.dia, &n.nascimento.mes, &n.nascimento.ano); //Formatacao dos dados armazenados na variavel auxiliar, eles sao armazenados em uma variavel auxiliar do tipo do objeto que é usada para inserir na fila
-        inserirElemento(lista, n);
+        sscanf(aux, "<%[^,], %[^,], %d/%d/%d, %d/%d/%d>\n", &n.nome, &n.sexo, &n.nascimento.dia, &n.nascimento.mes, &n.nascimento.ano, &n.nascimento.dia, &n.nascimento.mes, &n.nascimento.ano); //Formatacao dos dados armazenados na variavel auxiliar, eles sao armazenados em uma variavel auxiliar do tipo do objeto que é usada para inserir na fila
+        printf("%s, %c, %d/%d/%d, %d/%d/%d >\n", n.nome, n.sexo, n.nascimento.dia, n.nascimento.mes, n.nascimento.ano, n.nascimento.dia, n.nascimento.mes, n.nascimento.ano);
+        //inserirElemento(lista, n);
     }
 }
 
@@ -162,12 +204,15 @@ FILE sv_file(FILE *file, Lista *lista) {
 
 int main(int argc, char *argv[]) {
     //Variaveis de arquivos
-    FILE *entrada = op_file(NAME);
+    FILE *entrada = op_file("pacientes.txt");
     FILE *saidaUm = cr_file("ginecologita.txt");
     FILE *saidaDois = cr_file("andrologista.txt");
     //Variaveis de lista
     Lista pacientesMasculino;
     Lista pacientesFeminino;
+    rd_file(entrada, &pacientesMasculino);
+    rd_file(entrada, &pacientesMasculino);
+    rd_file(entrada, &pacientesMasculino);
     rd_file(entrada, &pacientesMasculino);
 
     fclose(entrada);
