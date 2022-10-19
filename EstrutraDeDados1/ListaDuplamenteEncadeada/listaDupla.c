@@ -33,6 +33,9 @@ void inserirElemento(Lista *list, int chave) {
     NoLista *novo;
     novo = (NoLista*) malloc(sizeof(NoLista));
     novo->chave = chave;
+    novo->anterior = NULL;
+    novo->proximo = NULL;
+
     if(estaVazia(list) == 0) {
         list->inicio = novo;
     } else if(chave < list->inicio->chave) {
@@ -45,9 +48,15 @@ void inserirElemento(Lista *list, int chave) {
             //aux->anterior = aux;
             aux = aux->proximo;
         }
+        if (aux->proximo != NULL)
+        {
+            aux->proximo->anterior = novo;
+            /* code */
+        }
+
         novo->proximo = aux->proximo;
         novo->anterior = aux;
-        novo->proximo->anterior = novo; //novo(7)->prox(8)->ante(1) passa a ser 7
+        //novo->proximo->anterior = novo; //novo(7)->prox(8)->ante(1) passa a ser 7
         aux->proximo = novo;
         //aux->proximo = aux->proximo;
         //aux->proximo->anterior = novo;
