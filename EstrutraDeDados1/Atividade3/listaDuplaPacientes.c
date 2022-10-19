@@ -268,7 +268,7 @@ int getData(Pacientes paciente) {
     {
         if (paciente.ultimaConsulta.mes == mesesI[i])
         {
-            ultimaConsulta = paciente.ultimaConsulta.dia + (ultimaConsulta)
+            ultimaConsulta = paciente.ultimaConsulta.dia + (ultimaConsulta);
         }
     }
 

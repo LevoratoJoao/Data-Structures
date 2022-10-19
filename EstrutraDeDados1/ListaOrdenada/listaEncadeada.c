@@ -44,7 +44,7 @@ void inserirElemento(Lista *list, int chave) {
         NoLista *aux = list->inicio;
         while (aux->proximo != NULL && aux->proximo->chave < chave) {
             aux = aux->proximo;
-        }   
+        }
         novo->proximo = aux->proximo;
         aux->proximo = novo;
     }
@@ -73,7 +73,7 @@ void destroiLista(Lista *list) {
 
 int main() {
     Lista lista;
-    
+
     inicializarLista(&lista);
     inserirElemento(&lista, 1);
     inserirElemento(&lista, 8);
