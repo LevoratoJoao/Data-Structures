@@ -9,11 +9,13 @@ typedef struct obj {
 
 typedef struct listaEncadeada {
     NoLista *inicio;
+    NoLista *final;
     int numElemento;
 } Lista;
 
 void inicializarLista(Lista *list) {
     list->inicio = NULL;
+    list->final = NULL;
     list->numElemento = 0;
 }
 
@@ -35,9 +37,9 @@ void inserirElemento(Lista *list, int chave) {
     novo->chave = chave;
     novo->anterior = NULL;
     novo->proximo = NULL;
-
     if(estaVazia(list) == 0) {
         list->inicio = novo;
+        list->final = novo;
     } else if(chave < list->inicio->chave) {
         novo->proximo = list->inicio;
         list->inicio->anterior = novo;
@@ -45,22 +47,17 @@ void inserirElemento(Lista *list, int chave) {
     } else {
         NoLista *aux = list->inicio;
         while (aux->proximo != NULL && aux->proximo->chave < chave) {
-            //aux->anterior = aux;
             aux = aux->proximo;
         }
-        if (aux->proximo != NULL)
-        {
+        if (aux->proximo != NULL) {
             aux->proximo->anterior = novo;
-            /* code */
         }
-
         novo->proximo = aux->proximo;
         novo->anterior = aux;
-        //novo->proximo->anterior = novo; //novo(7)->prox(8)->ante(1) passa a ser 7
+        if (aux->proximo == NULL) {
+            list->final = novo;
+        }
         aux->proximo = novo;
-        //aux->proximo = aux->proximo;
-        //aux->proximo->anterior = novo;
-        printf("\n");
     }
     list->numElemento++;
 }
@@ -94,6 +91,9 @@ int main() {
     inserirElemento(&lista, -12);
     inserirElemento(&lista, 54);
     inserirElemento(&lista, 7);
+    inserirElemento(&lista, 12);
+    inserirElemento(&lista, 9);
+    inserirElemento(&lista, 100);
 
     imprimirLista(&lista);
 

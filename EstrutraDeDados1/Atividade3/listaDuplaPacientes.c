@@ -31,6 +31,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <ctype.h>
 
 typedef struct data {
     int dia;
@@ -39,7 +40,7 @@ typedef struct data {
 } Data;
 
 typedef struct pacientes_st{
-    char nome[100];
+    char nome[50];
     char sexo[1];
     Data nascimento;
     Data ultimaConsulta;
@@ -53,15 +54,18 @@ int getSexo(Pacientes pacientes);
 typedef struct obj {
     Pacientes pacientes;
     struct obj* proximo;
+    struct obj* anterior;
 } NoLista;
 
 typedef struct listaEncadeada {
     NoLista *inicio;
+    NoLista *final;
     int numElemento;
 } Lista;
 
 void inicializarLista(Lista *list) {
     list->inicio = NULL;
+    list->final = NULL;
     list->numElemento = 0;
 }
 
@@ -77,46 +81,35 @@ int tamanhoLista(Lista *list) {
     return list->numElemento;
 }
 
-void inserirElemento(Lista *list, Pacientes pacientes) {
-    if (getSexo(pacientes)) {
-        NoLista *novo;
-        novo = (NoLista*) malloc(sizeof(NoLista));
-        novo->pacientes = pacientes;
-        novo->proximo = NULL;
-        if(estaVazia(list) == 0) {
-            list->inicio = novo;
-        } else if(strcmp(pacientes.nome, list->inicio->pacientes.nome) > 0) {
-            novo->proximo = list->inicio;
-            list->inicio = novo;
-        } else {
-            NoLista *aux = list->inicio;
-            while (aux->proximo != NULL && strcmp(aux->proximo->pacientes.nome, pacientes.nome) > 0) {
-                aux = aux->proximo;
-            }
-            novo->proximo = aux->proximo;
-            aux->proximo = novo;
+void inserirLista(Lista *list, Pacientes pacientes) {
+    NoLista *novo;
+    novo = (NoLista*) malloc(sizeof(NoLista));
+    novo->pacientes = pacientes;
+    novo->proximo = NULL;
+    novo->anterior = NULL;
+    if(estaVazia(list) == 0) {
+        list->inicio = novo;
+        list->final = novo;
+    } else if(strcmp(pacientes.nome, list->inicio->pacientes.nome) < 0) { //Se nome paciente atual for menor que do inicio da lista
+        novo->proximo = list->inicio; //Proximo do novo recebe o inicio atual
+        list->inicio->anterior = novo; //Anterior de inicio atual recebe o novo
+        list->inicio = novo;//Inicio é atualizado para o novo
+    } else { //Se nome paciente atual é maior que do inicio da lista
+        NoLista *aux = list->inicio;
+        while (aux->proximo != NULL && strcmp(aux->proximo->pacientes.nome, pacientes.nome) < 0) { //Enquanto aux nao for nulo e nome do prox paciente for menor que o do paciente atual
+            aux = aux->proximo; //aux passa areceber seu proximo
         }
-        list->numElemento++;
-    } else {
-        NoLista *novo;
-        novo = (NoLista*) malloc(sizeof(NoLista));
-        novo->pacientes = pacientes;
-        novo->proximo = NULL;
-        if(estaVazia(list) == 0) {
-            list->inicio = novo;
-        } else if(strcmp(pacientes.nome, list->inicio->pacientes.nome) < 0) {
-            novo->proximo = list->inicio;
-            list->inicio = novo;
-        } else {
-            NoLista *aux = list->inicio;
-            while (aux->proximo != NULL && strcmp(aux->proximo->pacientes.nome, pacientes.nome) < 0) {
-                aux = aux->proximo;
-            }
-            novo->proximo = aux->proximo;
-            aux->proximo = novo;
+        if (aux->proximo != NULL) {
+            aux->proximo->anterior = novo; //O anterior do proximo passa a receber o novo pois caso o novo for menor que o proximo assim o prox atualiza o ponteiro de seu anterior que antes apóntava pra o anterior de aux
         }
-        list->numElemento++;
+        novo->proximo = aux->proximo; //Proximo do novo passa a apontar pra o proximo do auxiliar
+        novo->anterior = aux; //Anterior do novo recebe o aux
+        if (aux->proximo == NULL) {
+            list->final = novo; //Atualizacao do final
+        }
+        aux->proximo = novo; //Proximo do auxiliar recebe novo
     }
+    list->numElemento++;
 }
 
 void imprimirLista(Lista *list) {
@@ -171,44 +164,6 @@ FILE *cr_file(char *name) {
     }
     return file;
 }
-/**
-void lerArquivo(FILE *fp, Pacientes *obj){ //lê uma linha a cada chamada
-    char linha[100];
-    char* palavra;
-    static int i=0;
-
-
-   if (!feof(fp) && !fgets(linha, 100, fp))  {      //Se não for final de arquivo e a leitura da linha foi feita com sucesso
-        printf("\n\nNao foi possível ler a linha");
-        return;
-    }
-
-    //----- id
-    palavra= strtok(linha,"<>,\n"); //como separador de informação temos os caracteres: {};\n
-    strcpy(obj->nome, palavra);
-
-    //----- nome
-    palavra= strtok(NULL,"<>, \n"); //como separador de informação temos os caracteres: {};\n
-    strcpy(obj->sexo, palavra);
-
-    //----- endereco
-    palavra= strtok(linha,"<>, /");  //como separador de informação temos os caracteres: {};\n
-    obj->nascimento.dia = atol (palavra);
-    palavra= strtok(linha,"<>, /");  //como separador de informação temos os caracteres: {};\n
-    obj->nascimento.mes = atol (palavra);
-    palavra= strtok(linha,"<>, /");  //como separador de informação temos os caracteres: {};\n
-    obj->nascimento.ano = atol (palavra);
-
-    palavra= strtok(linha,"<>, /");  //como separador de informação temos os caracteres: {};\n
-    obj->ultimaConsulta.dia = atol (palavra);
-    palavra= strtok(linha,"<>, /");  //como separador de informação temos os caracteres: {};\n
-    obj->ultimaConsulta.mes = atol (palavra);
-    palavra= strtok(linha,"<>, /\n");  //como separador de informação temos os caracteres: {};\n
-    obj->ultimaConsulta.ano = atol (palavra);
-
-    printf("%s, %c, %d/%d/%d, %d/%d/%d\n", obj->nome, obj->sexo, obj->nascimento.dia, obj->nascimento.mes, obj->nascimento.ano, obj->ultimaConsulta.dia, obj->ultimaConsulta.mes, obj->ultimaConsulta.ano);
-}
-**/
 
 /**
  * @brief Read file - funcao para ler arquivo e armazenar seus dados em uma variavel
@@ -217,16 +172,12 @@ void lerArquivo(FILE *fp, Pacientes *obj){ //lê uma linha a cada chamada
  * @param pacientesMasculino
  * @param pacientesFeminino
  */
-void rd_file(FILE *file, Lista *pacientesMasculino, Lista *pacientesFeminino) {
+void rd_file(FILE *file, Lista *pacientes) {
     Pacientes n; //Objeto auxiliar
     char aux[100]; //Variavel de leitura auxiliar
     while (fgets(aux, 100, file) != NULL) { // acaba o loop ao final do arquivo
         sscanf(aux, "<%[^,], %[^,], %d/%d/%d, %d/%d/%d>\n", &n.nome, &n.sexo, &n.nascimento.dia, &n.nascimento.mes, &n.nascimento.ano, &n.ultimaConsulta.dia, &n.ultimaConsulta.mes, &n.ultimaConsulta.ano); //Formatacao dos dados armazenados na variavel auxiliar, eles sao armazenados em uma variavel auxiliar do tipo do objeto que é usada para inserir na fila
-        if (getSexo(n)) {
-            inserirElemento(pacientesMasculino, n);
-        } else {
-            inserirElemento(pacientesFeminino, n);
-        }
+        inserirLista(pacientes, n);
     }
 }
 
@@ -237,9 +188,16 @@ void rd_file(FILE *file, Lista *pacientesMasculino, Lista *pacientesFeminino) {
  * @param lista
  * @return FILE
  */
-FILE sv_file(FILE *file, Lista *lista) {
+FILE sv_file(FILE *fileM, FILE *fileF, Lista *lista) {
     for (NoLista *i = lista->inicio; i != NULL; i = i->proximo) {
-        fprintf(file, "< %s, %c, %d/%d/%d, %d/%d/%d >\n", i->pacientes.nome , i->pacientes.sexo[0], i->pacientes.nascimento.dia, i->pacientes.nascimento.mes, i->pacientes.nascimento.ano, i->pacientes.ultimaConsulta.dia, i->pacientes.ultimaConsulta.mes, i->pacientes.ultimaConsulta.ano);
+        if (i->pacientes.sexo[0] == 'F') {
+            fprintf(fileF, "<%s, %c, %d/%d/%d, %d/%d/%d>\n", i->pacientes.nome , i->pacientes.sexo[0], i->pacientes.nascimento.dia, i->pacientes.nascimento.mes, i->pacientes.nascimento.ano, i->pacientes.ultimaConsulta.dia, i->pacientes.ultimaConsulta.mes, i->pacientes.ultimaConsulta.ano);
+        }
+    }
+    for (NoLista *i = lista->final; i != NULL; i = i->anterior) {
+        if (i->pacientes.sexo[0] == 'M') {
+            fprintf(fileM, "<%s, %c, %d/%d/%d, %d/%d/%d>\n", i->pacientes.nome , i->pacientes.sexo[0], i->pacientes.nascimento.dia, i->pacientes.nascimento.mes, i->pacientes.nascimento.ano, i->pacientes.ultimaConsulta.dia, i->pacientes.ultimaConsulta.mes, i->pacientes.ultimaConsulta.ano);
+        }
     }
 }
 
@@ -254,53 +212,57 @@ int getSexo(Pacientes pacientes) {
     }
 }
 
-int getData(Pacientes paciente) {
-    int mesesI[7];// = {01, 03, 05, 07, 08, 10, 12};
-    int mesesP[5];// = {02, 04, 06, 09, 11};
-    int lengthI = sizeof(mesesI) / sizeof(mesesI[0]);
-    int lengthP = sizeof(mesesP) / sizeof(mesesP[0]);
-    struct tm *data;
-    time_t tm;
-    time(&tm);
-    data = localtime(&tm);
-    int ultimaConsulta = 0;
-    for (int i = 0; i < lengthI; i++)
-    {
-        if (paciente.ultimaConsulta.mes == mesesI[i])
-        {
-            ultimaConsulta = paciente.ultimaConsulta.dia + (ultimaConsulta);
-        }
-    }
+// int getData(Pacientes paciente) {
+//     struct tm *data;
+//     time_t tm;
+//     time(&tm);
+//     data = localtime(&tm);
+//     int ultimaConsulta = 0;
+//
+//     printf("Dia do ano: %d\n", data->tm_yday);
+//     printf("Data: %d/%d/%d\n", data->tm_mday, data->tm_mon + 1, data->tm_year + 1900);
+// }
 
-    printf("Dia do ano: %d\n", data->tm_yday);
-    printf("Data: %d/%d/%d\n", data->tm_mday, data->tm_mon + 1, data->tm_year + 1900);
+void pesquisarPaciente(Lista pacientes, char *nome) {
+    NoLista *aux =  pacientes.inicio;
+    while (aux != NULL)
+    {
+        if (strcmp(aux->pacientes.nome, nome) == 0) {
+            //getData(aux->pacientes);
+            printf("Paciente encontrado:\n");
+            printf("<%s, %c, %d/%d/%d, %d/%d/%d>\n", aux->pacientes.nome, aux->pacientes.sexo[0], aux->pacientes.nascimento.dia, aux->pacientes.nascimento.mes, aux->pacientes.nascimento.ano, aux->pacientes.ultimaConsulta.dia, aux->pacientes.ultimaConsulta.mes, aux->pacientes.ultimaConsulta.ano);
+            return;
+        }
+        aux = aux->proximo;
+    }
+    printf("Paciente nao encontrado\n");
 }
 
-void pesquisarPaciente(Lista pacientesMasculino, Lista pacientesFeminino, char *nome) {
-    NoLista *auxM =  pacientesMasculino.inicio;
-    NoLista *auxF =  pacientesFeminino.inicio;
-    getData(auxM->pacientes);
-    while (auxM != NULL)
-    {
-        if (strcmp(auxM->pacientes.nome, nome) == 0) {
-            printf("Achou heim\n");
-        }
-        auxM = auxM->proximo;
-    }
-    while (auxF != NULL)
-    {
-        if (strcmp(auxF->pacientes.nome, nome) == 0) {
-            printf("Achou heim\n");
-        }
-        auxF = auxF->proximo;
-    }
+Lista inserirPaciente(Lista *pacientes) {
+    Pacientes aux;
+    printf("Nome: ");
+    setbuf(stdin, NULL);
+    fgets(aux.nome, 50, stdin);
+    aux.nome[strcspn(aux.nome, "\n")] = '\0';
+    printf("Sexo: ");
+    scanf("%c", &aux.sexo[0]);
+    aux.sexo[0] = toupper(aux.sexo[0]);
+    printf("Nascimento\nDia: ");
+    scanf("%d", &aux.nascimento.dia);
+    printf("Mes: ");
+    scanf("%d", &aux.nascimento.mes);
+    printf("Ano: ");
+    scanf("%d", &aux.nascimento.ano);
+    printf("Ultima consulta\nDia: ");
+    scanf("%d", &aux.ultimaConsulta.dia);
+    printf("Mes: ");
+    scanf("%d", &aux.ultimaConsulta.mes);
+    printf("Ano: ");
+    scanf("%d", &aux.ultimaConsulta.ano);
+    inserirLista(pacientes, aux);
 }
 
-void inserirPaciente() {
-
-}
-
-void menuSistema(Lista pacientesMasculino, Lista pacientesFeminino) {
+void menuSistema(Lista pacientes, FILE *saidaF, FILE *saidaM) {
     while(1) {
         int op; //opcao
         printf("Digite sua opcao:\n (1) - Inserir paciente\n (2) - Pesquisar paciente\n (3) - Mostrar pacientes\n (4) - Sair do sistema\n");
@@ -308,8 +270,7 @@ void menuSistema(Lista pacientesMasculino, Lista pacientesFeminino) {
         switch (op)
         {
         case 1:
-        printf("Em andamento...\n");
-            //inserirPaciente();
+            inserirPaciente(&pacientes);
             break;
         case 2:
             char nome[50];
@@ -317,14 +278,14 @@ void menuSistema(Lista pacientesMasculino, Lista pacientesFeminino) {
             setbuf(stdin, NULL);
             fgets(nome, 50, stdin);
             nome[strcspn(nome, "\n")] = '\0';
-            pesquisarPaciente(pacientesMasculino, pacientesFeminino, nome);
+            pesquisarPaciente(pacientes, nome);
             break;
         case 3:
             printf("\n\nLISTAS\n");
-            imprimirLista(&pacientesMasculino);
-            imprimirLista(&pacientesFeminino);
+            imprimirLista(&pacientes);
             break;
         case 4:
+            sv_file(saidaM, saidaF, &pacientes);
             return;
             break;
 
@@ -338,24 +299,21 @@ void menuSistema(Lista pacientesMasculino, Lista pacientesFeminino) {
 int main(int argc, char *argv[]) {
     //Variaveis de arquivos
     FILE *entrada = op_file("pacientes.txt");
-    FILE *saidaUm = cr_file("ginecologita.txt");
-    FILE *saidaDois = cr_file("andrologista.txt");
+    FILE *saidaF = cr_file("ginecologita.txt");
+    FILE *saidaM = cr_file("andrologista.txt");
     //Variaveis de lista
-    Lista pacientesMasculino;
-    Lista pacientesFeminino;
+    Lista pacientes;
     //Inicializando listas
-    inicializarLista(&pacientesFeminino);
-    inicializarLista(&pacientesMasculino);
+    inicializarLista(&pacientes);
     //Lendo arquivo
-    rd_file(entrada, &pacientesMasculino, &pacientesFeminino);
+    rd_file(entrada, &pacientes);
     //menu
-    menuSistema(pacientesMasculino, pacientesFeminino);
+    menuSistema(pacientes, saidaF, saidaM);
     //Destruindo listas
-    destroiLista(&pacientesFeminino);
-    destroiLista(&pacientesMasculino);
+    destroiLista(&pacientes);
     //Fechando arquivos
     fclose(entrada);
-    fclose(saidaUm);
-    fclose(saidaDois);
+    fclose(saidaF);
+    fclose(saidaM);
     return EXIT_SUCCESS;
 }
