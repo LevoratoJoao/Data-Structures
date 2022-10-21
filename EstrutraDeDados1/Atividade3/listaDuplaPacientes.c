@@ -41,7 +41,7 @@ typedef struct data {
 
 typedef struct pacientes_st{
     char nome[50];
-    char sexo[1];
+    char sexo;
     Data nascimento;
     Data ultimaConsulta;
 } Pacientes;
@@ -63,12 +63,23 @@ typedef struct listaEncadeada {
     int numElemento;
 } Lista;
 
+/**
+ * @brief Inicializa lista
+ *
+ * @param list
+ */
 void inicializarLista(Lista *list) {
     list->inicio = NULL;
     list->final = NULL;
     list->numElemento = 0;
 }
 
+/**
+ * @brief Verifica se a lista esta vazia
+ *
+ * @param list
+ * @return int
+ */
 int estaVazia(Lista *list) {
     if (list->numElemento == 0) {
         return 0;
@@ -77,10 +88,12 @@ int estaVazia(Lista *list) {
     }
 }
 
-int tamanhoLista(Lista *list) {
-    return list->numElemento;
-}
-
+/**
+ * @brief Funcao para inserco na lista de forma duplamente encadeada
+ *
+ * @param list
+ * @param pacientes
+ */
 void inserirLista(Lista *list, Pacientes pacientes) {
     NoLista *novo;
     novo = (NoLista*) malloc(sizeof(NoLista));
@@ -112,16 +125,11 @@ void inserirLista(Lista *list, Pacientes pacientes) {
     list->numElemento++;
 }
 
-void imprimirLista(Lista *list) {
-    NoLista *aux = list->inicio;
-    printf("Inicio da lista:\n");
-    while (aux != NULL) {
-        printf("<%s, %c, %d/%d/%d, %d/%d/%d>\n", aux->pacientes.nome, aux->pacientes.sexo[0], aux->pacientes.nascimento.dia, aux->pacientes.nascimento.mes, aux->pacientes.nascimento.ano, aux->pacientes.ultimaConsulta.dia, aux->pacientes.ultimaConsulta.mes, aux->pacientes.ultimaConsulta.ano);
-        aux = aux->proximo;
-    }
-    printf("\nFim da lista\n");
-}
-
+/**
+ * @brief Funcao para destruir a lista liberando memoria
+ *
+ * @param list
+ */
 void destroiLista(Lista *list) {
     NoLista *aux = list->inicio;
     while (list->inicio != NULL) {
@@ -133,7 +141,6 @@ void destroiLista(Lista *list) {
 
 ///////////////////////////////////////////////////////////////////
 // FUNCOES ARQUIVOS
-#define NAME "pacientes.txt"
 
 /**
  * @brief Open file - funcao para abrir arquivo com nome passado por parametro em formato de leitura (read)
@@ -189,14 +196,14 @@ void rd_file(FILE *file, Lista *pacientes) {
  * @return FILE
  */
 FILE sv_file(FILE *fileM, FILE *fileF, Lista *lista) {
-    for (NoLista *i = lista->inicio; i != NULL; i = i->proximo) {
-        if (i->pacientes.sexo[0] == 'F') {
-            fprintf(fileF, "<%s, %c, %d/%d/%d, %d/%d/%d>\n", i->pacientes.nome , i->pacientes.sexo[0], i->pacientes.nascimento.dia, i->pacientes.nascimento.mes, i->pacientes.nascimento.ano, i->pacientes.ultimaConsulta.dia, i->pacientes.ultimaConsulta.mes, i->pacientes.ultimaConsulta.ano);
+    for (NoLista *i = lista->inicio; i != NULL; i = i->proximo) { //Percorre lista de A-Z
+        if (i->pacientes.sexo == 'F') { //Salva apenas Feminino
+            fprintf(fileF, "<%s, %c, %d/%d/%d, %d/%d/%d>\n", i->pacientes.nome , i->pacientes.sexo, i->pacientes.nascimento.dia, i->pacientes.nascimento.mes, i->pacientes.nascimento.ano, i->pacientes.ultimaConsulta.dia, i->pacientes.ultimaConsulta.mes, i->pacientes.ultimaConsulta.ano);
         }
     }
-    for (NoLista *i = lista->final; i != NULL; i = i->anterior) {
-        if (i->pacientes.sexo[0] == 'M') {
-            fprintf(fileM, "<%s, %c, %d/%d/%d, %d/%d/%d>\n", i->pacientes.nome , i->pacientes.sexo[0], i->pacientes.nascimento.dia, i->pacientes.nascimento.mes, i->pacientes.nascimento.ano, i->pacientes.ultimaConsulta.dia, i->pacientes.ultimaConsulta.mes, i->pacientes.ultimaConsulta.ano);
+    for (NoLista *i = lista->final; i != NULL; i = i->anterior) { //Percorre lista de Z-A
+        if (i->pacientes.sexo == 'M') { //Salva apenas Masculino
+            fprintf(fileM, "<%s, %c, %d/%d/%d, %d/%d/%d>\n", i->pacientes.nome , i->pacientes.sexo, i->pacientes.nascimento.dia, i->pacientes.nascimento.mes, i->pacientes.nascimento.ano, i->pacientes.ultimaConsulta.dia, i->pacientes.ultimaConsulta.mes, i->pacientes.ultimaConsulta.ano);
         }
     }
 }
@@ -204,33 +211,94 @@ FILE sv_file(FILE *fileM, FILE *fileF, Lista *lista) {
 ///////////////////////////////////////////////////////////////////
 // FUNCOES DO PROGRAMA
 
+/**
+ * @brief Funcao para saber qual sexo do paciente (retorna 1 de masculo e 0 se feminino)
+ *
+ * @param pacientes
+ * @return int
+ */
 int getSexo(Pacientes pacientes) {
-    if (strcmp(pacientes.sexo, "M")) {
+    if (pacientes.sexo == 'M') {
         return 0;
     } else {
         return 1;
     }
 }
 
-// int getData(Pacientes paciente) {
-//     struct tm *data;
-//     time_t tm;
-//     time(&tm);
-//     data = localtime(&tm);
-//     int ultimaConsulta = 0;
-//
-//     printf("Dia do ano: %d\n", data->tm_yday);
-//     printf("Data: %d/%d/%d\n", data->tm_mday, data->tm_mon + 1, data->tm_year + 1900);
-// }
+/**
+ * @brief Esta funcao realiza os calculos necessarios para se saber qual a quantidade de dias que se passaram desde a ultima consulta de um determinado paciente (desconsidera anos bissextos)
+ *
+ * @param paciente
+ * @return int
+ */
+int getData(Pacientes paciente) {
+    struct tm *data; //var tipo da struct tm (time.h)
+    time_t tm; //var tipo time_t para funcoes da time.h
+    time(&tm); //retorna time atual e armazena no timer (tm)
+    data = localtime(&tm); //var do tipo da struct recebe todos os dados de tm formatados para o localtime
+          //meses =  01  02  03  04  05  06  07  08  09  10  11  12
+    int meses[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}; //Vetor dos meses com seus respectivos dias
+    int ultimaConsulta = 0;
+    int ano = ((data->tm_year + 1900) - paciente.ultimaConsulta.ano) * 365; //calc da diferenca dos anos (atual - ultima consulta)
+    int dia = data->tm_mday - paciente.ultimaConsulta.dia; //calc da diferenca dos dias (dia atual - ultima consulta)
+    int mes = 0;
+    int subMes = (data->tm_mon + 1) - paciente.ultimaConsulta.mes; //calc da diferenca do mes (mes atual - ultima consulta)
+    if (subMes > 0) { //Mes atual > mes da ultima consulta
+        //Como mes da ultima consulta é menor que o atual é ele que usaremos para percorrer os meses ate o atual
+        int mesAux = paciente.ultimaConsulta.mes;
+        while (mesAux != (data->tm_mon + 1)) {
+            mes = mes + meses[mesAux]; //Somatorio dos meses
+            mesAux++;
+        }
+    } else { //Mes atual < mes da ultima consulta
+        //Como mes atual é menor que o da ultima consulta é ele que usaremos para percorrer os meses ate o da ultima consulta
+        int mesAux = data->tm_mon + 1;
+        while (mesAux != paciente.ultimaConsulta.mes) {
+            mes = mes - meses[mesAux]; //Como mes atual < da ultima consulta seu somatorio sera de forma negativa
+            mesAux++;
+        }
+    }
+    ultimaConsulta = ano + dia + mes; //Soma total
+    return ultimaConsulta;
+}
 
+/**
+ * @brief Esta funcao realiza o calculo da idade de um determinado paciente
+ *
+ * @param paciente
+ * @return int
+ */
+int getAge(Pacientes paciente) {
+    struct tm *data; //var tipo da struct tm (time.h)
+    time_t tm; //var tipo time_t para funcoes da time.h
+    time(&tm); //retorna time atual e armazena no timer (tm)
+    data = localtime(&tm); //var do tipo da struct recebe todos os dados de tm formatados para o localtime
+    int idade = ((data->tm_year + 1900) - paciente.nascimento.ano);
+    if (data->tm_mon < paciente.nascimento.mes) { //Se mes atual é menor que mes de nascimento entao paciente nao fez aniversario ainda
+        return (idade - 1);
+    } else if (data->tm_mon == paciente.nascimento.mes) { //Se mes atual é igual a mes de nascimento entao paciente pode ou nao ter feito aniversario
+        if (data->tm_mday < paciente.nascimento.dia) { //Se dia atual é menor que dia do nascimento entao paciente nao fez aniversario ainda
+            return (idade - 1);
+        } else {
+            return idade;
+        }
+    } else {
+        return idade;
+    }
+}
+
+/**
+ * @brief Funcao para pesquisar um paciente e ver se esta dentro da lista, se estiver é mostrado também quandos dias desde a ultima consulta
+ *
+ * @param pacientes
+ * @param nome
+ */
 void pesquisarPaciente(Lista pacientes, char *nome) {
     NoLista *aux =  pacientes.inicio;
     while (aux != NULL)
     {
         if (strcmp(aux->pacientes.nome, nome) == 0) {
-            //getData(aux->pacientes);
-            printf("Paciente encontrado:\n");
-            printf("<%s, %c, %d/%d/%d, %d/%d/%d>\n", aux->pacientes.nome, aux->pacientes.sexo[0], aux->pacientes.nascimento.dia, aux->pacientes.nascimento.mes, aux->pacientes.nascimento.ano, aux->pacientes.ultimaConsulta.dia, aux->pacientes.ultimaConsulta.mes, aux->pacientes.ultimaConsulta.ano);
+            printf("Paciente %s encontrado(a): idade %d - Ultima consulta realizada foi a %d dias\n", aux->pacientes.nome, getAge(aux->pacientes), getData(aux->pacientes));
             return;
         }
         aux = aux->proximo;
@@ -238,15 +306,20 @@ void pesquisarPaciente(Lista pacientes, char *nome) {
     printf("Paciente nao encontrado\n");
 }
 
-Lista inserirPaciente(Lista *pacientes) {
+/**
+ * @brief Funcao para insercao de novo paciente no sistema e na lista.
+ *
+ * @param pacientes
+ */
+void inserirPaciente(Lista *pacientes) {
     Pacientes aux;
     printf("Nome: ");
     setbuf(stdin, NULL);
     fgets(aux.nome, 50, stdin);
     aux.nome[strcspn(aux.nome, "\n")] = '\0';
     printf("Sexo: ");
-    scanf("%c", &aux.sexo[0]);
-    aux.sexo[0] = toupper(aux.sexo[0]);
+    scanf("%c", &aux.sexo);
+    aux.sexo = toupper(aux.sexo);
     printf("Nascimento\nDia: ");
     scanf("%d", &aux.nascimento.dia);
     printf("Mes: ");
@@ -262,17 +335,23 @@ Lista inserirPaciente(Lista *pacientes) {
     inserirLista(pacientes, aux);
 }
 
+/**
+ * @brief Menu do sistema, contem todas as chamadas das funcoes principais
+ *
+ * @param pacientes
+ * @param saidaF
+ * @param saidaM
+ */
 void menuSistema(Lista pacientes, FILE *saidaF, FILE *saidaM) {
     while(1) {
         int op; //opcao
-        printf("Digite sua opcao:\n (1) - Inserir paciente\n (2) - Pesquisar paciente\n (3) - Mostrar pacientes\n (4) - Sair do sistema\n");
+        printf("Digite sua opcao:\n (1) - Inserir paciente\n (2) - Pesquisar paciente\n (3) - Sair do sistema\n");
         scanf("%d", &op);
-        switch (op)
-        {
-        case 1:
+        switch (op) {
+        case 1: //Inserir
             inserirPaciente(&pacientes);
             break;
-        case 2:
+        case 2: //Pesquisar
             char nome[50];
             printf("Digite o nome do paciente que deseja buscar: ");
             setbuf(stdin, NULL);
@@ -280,16 +359,11 @@ void menuSistema(Lista pacientes, FILE *saidaF, FILE *saidaM) {
             nome[strcspn(nome, "\n")] = '\0';
             pesquisarPaciente(pacientes, nome);
             break;
-        case 3:
-            printf("\n\nLISTAS\n");
-            imprimirLista(&pacientes);
-            break;
-        case 4:
+        case 3: //Sair
             sv_file(saidaM, saidaF, &pacientes);
             return;
             break;
-
-        default:
+        default: //Opcao invalida
             printf("Opcao invalida! Digite novamente\n");
             break;
         }
@@ -298,9 +372,9 @@ void menuSistema(Lista pacientes, FILE *saidaF, FILE *saidaM) {
 
 int main(int argc, char *argv[]) {
     //Variaveis de arquivos
-    FILE *entrada = op_file("pacientes.txt");
-    FILE *saidaF = cr_file("ginecologita.txt");
-    FILE *saidaM = cr_file("andrologista.txt");
+    FILE *entrada = op_file(argv[1]);
+    FILE *saidaF = cr_file(argv[2]);
+    FILE *saidaM = cr_file(argv[3]);
     //Variaveis de lista
     Lista pacientes;
     //Inicializando listas
