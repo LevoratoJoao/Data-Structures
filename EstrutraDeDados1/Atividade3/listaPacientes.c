@@ -363,8 +363,8 @@ void menuSistema(Lista pacientesMasculino, Lista pacientesFeminino, FILE *saidaF
 int main(int argc, char *argv[]) {
     //Variaveis de arquivos
     FILE *entrada = op_file("pacientes.txt");
-    FILE *saidaF = cr_file("ginecologita.txt");
-    FILE *saidaM = cr_file("andrologista.txt");
+    FILE *saidaF = cr_file("andrologista.txt");
+    FILE *saidaM = cr_file("ginecologita.txt");
     //Variaveis de lista
     Lista pacientesMasculino;
     Lista pacientesFeminino;
@@ -381,6 +381,6 @@ int main(int argc, char *argv[]) {
     //Fechando arquivos
     fclose(entrada);
     fclose(saidaF);
-    fclose(saidaM   );
+    fclose(saidaM);
     return EXIT_SUCCESS;
 }
