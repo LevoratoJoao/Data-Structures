@@ -1,6 +1,6 @@
 /**
  * @file listaPacientes.c
- * @author João Vitor Levorato de Souza (joaosouza.2021@alunos.utfpr.edu.br)
+ * @author João Vitor Levorato de Souza (joaosouza.2021@alunos.utfpr.edu.br) // Gabriel Reis
  * @brief Um casal de m ́edicos decidiu organizar seus pacientes em listas. Atualmente, os dados dos paciente est ̃ao
  * todos juntos em um  ́unico arquivo e sem qualquer organiza ̧c ̃ao alfab ́etica ou de gˆenero. A ginecologista
  * quer listar suas pacientes em ordem alfab ́etica, de A-Z, por nome. J ́a o andrologista precisa que seus

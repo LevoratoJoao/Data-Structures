@@ -9,7 +9,6 @@
 <Liana Carvalho Lima, F, 20/2/1984, 18/5/2021>
 <Liana Maria Lima, F, 20/2/1984, 18/5/2021>
 <Liana Viviane Carvalho, F, 19/7/1964, 18/5/1999>
-<MAHTEUS, F, 12/12/12, 12/12/12>
 <Maria Cristina Souza, F, 14/2/1982, 20/10/2020>
 <Maria Gabriela Santos Souza, F, 11/2/1980, 20/12/2020>
 <Maria José Crispim, F, 14/2/1982, 20/10/2020>
