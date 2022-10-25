@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "*.pdf": "pdf",
-        "stdbool.h": "c",
-        "stdio.h": "c"
-    },
-    //"comments.openView": "file"
-}
