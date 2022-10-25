@@ -288,17 +288,23 @@ void pesquisarPaciente(Lista pacientes, char *nome) {
     printf("Paciente nao encontrado\n");
 }
 
-// int verificarInsercao(Pacientes aux) {
-//     if (aux.sexo != 'M' || aux.sexo != 'F' || aux.nascimento.dia > 31 || aux.nascimento.dia < 1 || aux.nascimento.mes > 12 || aux.nascimento.mes < 1 || aux.nascimento.ano < 1900 || aux.nascimento.dia > 31 || aux.nascimento.dia < 1 || aux.nascimento.mes > 12 || aux.nascimento.mes < 1 || aux.nascimento.ano < 1900)
-//     {
-//         return 1;
-//     } else {
-//         return 0;
-//     }
-// }
+/**
+ * @brief A funcao faz todas as verificacoes necessarias para uma insercao correta de paciente
+ *
+ * @param aux
+ * @return int
+ */
+int verificarInsercao(Pacientes aux) {
+    if (aux.nascimento.dia > 31 || aux.nascimento.dia < 1 || aux.nascimento.mes > 12 || aux.nascimento.mes < 1 || aux.nascimento.ano < 1900 || aux.ultimaConsulta.dia > 31 || aux.ultimaConsulta.dia < 1 || aux.ultimaConsulta.mes > 12 || aux.ultimaConsulta.mes < 1 || aux.ultimaConsulta.ano < 1900)
+    {
+        return 1;
+    } else {
+        return 0;
+    }
+}
 
 /**
- * @brief Funcao para insercao de novo paciente no sistema e na lista. A funcao faz todas as verificacoes necessarias para uma insercao correta de paciente
+ * @brief Funcao para insercao de novo paciente no sistema e na lista.
  *
  * @param pacientes
  */
@@ -311,48 +317,25 @@ void inserirPaciente(Lista *pacientes) {
     printf("Sexo: ");
     scanf("%c", &aux.sexo);
     aux.sexo = toupper(aux.sexo);
-    if (aux.sexo != 'M' || aux.sexo != 'F') { //
-        printf("Erro na insercao!!! Digite novamente\n");
-        return;
-    }
     printf("Nascimento\nDia: ");
     scanf("%d", &aux.nascimento.dia);
-    if (aux.nascimento.dia > 31 || aux.nascimento.dia < 1) {
-        printf("Erro na insercao!!! Digite novamente\n");
-        return;
-    }
     printf("Mes: ");
     scanf("%d", &aux.nascimento.mes);
-    if (aux.nascimento.mes > 12 || aux.nascimento.mes < 1) {
-        printf("Erro na insercao!!! Digite novamente\n");
-        return;
-    }
     printf("Ano: ");
     scanf("%d", &aux.nascimento.ano);
-    if (aux.nascimento.ano < 1900) {
-        printf("Erro na insercao!!! Digite novamente\n");
-        return;
-    }
     printf("Ultima consulta\nDia: ");
     scanf("%d", &aux.ultimaConsulta.dia);
-    if (aux.ultimaConsulta.dia > 31 || aux.ultimaConsulta.dia < 1) {
-        printf("Erro na insercao!!! Digite novamente\n");
-        return;
-    }
     printf("Mes: ");
     scanf("%d", &aux.ultimaConsulta.mes);
-    if (aux.ultimaConsulta.mes > 12 || aux.ultimaConsulta.mes < 1) {
-        printf("Erro na insercao!!! Digite novamente\n");
-        return;
-    }
     printf("Ano: ");
     scanf("%d", &aux.ultimaConsulta.ano);
-    if (aux.ultimaConsulta.ano < 1900) {
-        printf("Erro na insercao!!! Digite novamente\n");
-        return;
-    }
-    inserirLista(pacientes, aux);
+    if (verificarInsercao(aux) == 0)
+    {
+        inserirLista(pacientes, aux);
 
+    } else {
+        printf("Erro na insercao! Favor preencher novamente\n");
+    }
 }
 
 void menuSistema(Lista pacientes, FILE *saidaF, FILE *saidaM) {
@@ -387,9 +370,9 @@ void menuSistema(Lista pacientes, FILE *saidaF, FILE *saidaM) {
 
 int main(int argc, char *argv[]) {
     //Variaveis de arquivos
-    FILE *entrada = op_file("pacientes.txt");
-    FILE *saidaF = cr_file("ginecologita.txt");
-    FILE *saidaM = cr_file("andrologista.txt");
+    FILE *entrada = op_file(argv[1]);
+    FILE *saidaF = cr_file(argv[2]);
+    FILE *saidaM = cr_file(argv[3]);
     //Variaveis de lista
     Lista pacientes;
     //Inicializando listas
