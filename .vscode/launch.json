@@ -31,4 +31,11 @@
             "miDebuggerPath": "/usr/bin/gdb"
         }
     ]
+    // ],
+    // "compounds": [
+    //     {
+    //         "name": "Compound",
+    //         "configurations": []
+    //     }
+    // ]
   }
