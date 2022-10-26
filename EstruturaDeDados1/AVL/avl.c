@@ -21,7 +21,7 @@ void preOrdemAVL(NoAVL **arvore) {
     if (estaVaziaAVL((*arvore))) {
         return;
     }
-    printf("{ N: %d | H: %d }, ", (*arvore)->chave, (*arvore)->altura);
+    printf("N: %d | H: %d\n", (*arvore)->chave, (*arvore)->altura);
     preOrdemAVL(&(*arvore)->esquerda);
     preOrdemAVL(&(*arvore)->direita);
 }
@@ -109,7 +109,7 @@ void rotacaoSimplesEsquerda(NoAVL **p) {
 void rotacaoSimplesDireita(NoAVL **p) {
     NoAVL *u = (*p)->esquerda;
     u = (*p)->esquerda;
-    (*p)->esquerda = (*p)->direita;
+    (*p)->esquerda = u->direita;
     u->direita = (*p);
     // Atualizar altura do p e do u
     (*p)->altura = atualizarAlturaArvoreAVL((*p)->esquerda, (*p)->direita);
@@ -228,42 +228,23 @@ int main(int argc, const char *argv[]) {
     } else {
         printf("Nao esta vazia\n");
     }
-    insercaoArvoreAVL(&(arvore), 77);
-    printf("[ ");
+    printf("Avrovre\n\n");
+    insercaoArvoreAVL(&(arvore), 13);
+    insercaoArvoreAVL(&(arvore), 14);
+    insercaoArvoreAVL(&(arvore), 15);    
     preOrdemAVL(&(arvore));
-    printf(" ]\n");
-    insercaoArvoreAVL(&(arvore), 12);
-    printf("[ ");
+
+    printf("Avrovre\n\n");
+    insercaoArvoreAVL(&(arvore), 12);    
+    insercaoArvoreAVL(&(arvore), 11);    
+    insercaoArvoreAVL(&(arvore), 17);    
     preOrdemAVL(&(arvore));
-    printf(" ]\n");
-    insercaoArvoreAVL(&(arvore), 10);
-    printf("[ ");
+
+    printf("Avrovre\n\n");
+    insercaoArvoreAVL(&(arvore), 16);    
+    insercaoArvoreAVL(&(arvore), 8);    
+    insercaoArvoreAVL(&(arvore), 9);    
     preOrdemAVL(&(arvore));
-    printf(" ]\n");
-    insercaoArvoreAVL(&(arvore), 5);
-    printf("[ ");
-    preOrdemAVL(&(arvore));
-    printf(" ]\n");
-    insercaoArvoreAVL(&(arvore), 8);
-    printf("[ ");
-    preOrdemAVL(&(arvore));
-    printf(" ]\n");
-    insercaoArvoreAVL(&(arvore), 80);
-    printf("[ ");
-    preOrdemAVL(&(arvore));
-    printf(" ]\n");
-    insercaoArvoreAVL(&(arvore), 79);
-    printf("[ ");
-    preOrdemAVL(&(arvore));
-    printf(" ]\n");
-    insercaoArvoreAVL(&(arvore), 91);
-    printf("[ ");
-    preOrdemAVL(&(arvore));
-    printf(" ]\n");
-    insercaoArvoreAVL(&(arvore), 100);
-    printf("[ ");
-    preOrdemAVL(&(arvore));
-    printf(" ]\n");
 
     destruirAVL(&(arvore));
     return EXIT_SUCCESS;
