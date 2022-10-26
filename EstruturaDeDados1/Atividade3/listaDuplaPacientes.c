@@ -1,6 +1,6 @@
 /**
  * @file listaPacientes.c
- * @author João Vitor Levorato de Souza (joaosouza.2021@alunos.utfpr.edu.br) // Gabriel Reis
+ * @author João Vitor Levorato de Souza (2419890) // Gabriel Reis Macedo (2408775)
  * @brief Um casal de m ́edicos decidiu organizar seus pacientes em listas. Atualmente, os dados dos paciente est ̃ao
  * todos juntos em um  ́unico arquivo e sem qualquer organiza ̧c ̃ao alfab ́etica ou de gˆenero. A ginecologista
  * quer listar suas pacientes em ordem alfab ́etica, de A-Z, por nome. J ́a o andrologista precisa que seus
@@ -304,6 +304,21 @@ void pesquisarPaciente(Lista pacientes, char *nome) {
         aux = aux->proximo;
     }
     printf("Paciente nao encontrado\n");
+}
+
+/**
+ * @brief A funcao faz todas as verificacoes necessarias para uma insercao correta de paciente
+ *
+ * @param aux
+ * @return int
+ */
+int verificarInsercao(Pacientes aux) {
+    if (aux.nascimento.dia > 31 || aux.nascimento.dia < 1 || aux.nascimento.mes > 12 || aux.nascimento.mes < 1 || aux.nascimento.ano < 1900 || aux.ultimaConsulta.dia > 31 || aux.ultimaConsulta.dia < 1 || aux.ultimaConsulta.mes > 12 || aux.ultimaConsulta.mes < 1 || aux.ultimaConsulta.ano < 1900)
+    {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 /**
