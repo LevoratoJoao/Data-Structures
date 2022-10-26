@@ -121,7 +121,7 @@ FILE *op_file(char *name) {
     FILE *file = fopen(name, "r");
     if (file == NULL) {
         printf("error: fail to open file\n");
-        return NULL;
+        exit(1);
     }
     return file;
 }
@@ -163,7 +163,7 @@ FILE *cr_file(char *name) {
     FILE *file = fopen(name, "w+");
     if (file == NULL) {
         printf("error: fail to create file\n");
-        return NULL;
+        exit(1);
     }
     return file;
 }

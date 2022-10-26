@@ -7,7 +7,7 @@
 
 /** Informações:
     S - Estrutura de dados
-    k - chave 
+    k - chave
     x - objeto que queremos inserir na estrutura
 **/
 
@@ -26,6 +26,14 @@ typedef struct pilha {
 
 void iniciarPilha(Pilha *pilha) {
     pilha->topo = 0;
+}
+
+bool estaCheia(Pilha *pilha) {
+    if (pilha->topo == N) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 void inserir(Pilha *pilha, Aluno eu) {
@@ -47,13 +55,7 @@ int removerPilha(Pilha *pilha) {
 //////////////////////////////////////////////////
 // OPERACOES DE CONSULTA //
 
-bool estaCheia(Pilha *pilha) {
-    if (pilha->topo == N) {
-        return true;
-    } else {
-        return false;
-    }
-}
+
 
 //Esta vazia...
 
