@@ -62,6 +62,50 @@ void imprimirLista(Lista *list) {
     printf("\nFim da lista\n");
 }
 
+int pesquisarLista(Lista *lista, int chave) {
+    if (estaVazia(lista) == 0) {
+        return 0;
+    }
+    NoLista *aux = lista->inicio;
+    while (aux != NULL && chave > aux->chave) {
+        aux = aux->proximo;
+    }
+    if (aux == NULL || aux->chave > chave) {
+        return 0;
+    }
+    return 1;
+}
+
+int removerLista(Lista *lista, int chave) {
+    if (estaVazia(lista) == 0 || chave < lista->inicio->chave) { //Lista Vazia ou elemento é menor que o primeiro elemento (nao existe)
+        return 1;
+    }
+    if (chave == lista->inicio->chave) { //Elemento a ser removido é o primeiro
+        NoLista *aux = lista->inicio;
+        lista->inicio = lista->inicio->proximo; //Proximo do inicio passa a ser o inicio
+        free(aux); //Desaloca mem
+        lista->numElemento--;
+        return 0;
+    }
+    //Percorrer lista
+    NoLista *auxPercorre = lista->inicio;
+    while (auxPercorre->proximo != NULL && (chave > auxPercorre->proximo->chave)) { //Percorre enquanto aux for differente de NULL e chave maior que proximo
+        auxPercorre = auxPercorre->proximo;
+    }
+    if (auxPercorre->proximo == NULL || chave < auxPercorre->proximo->chave) { //Chave menor que o proximo elemento entao elemento que queremos nao esta na lista
+        printf("Nao encontrado\n");
+        return 1;
+    } else {
+        printf("Elemento removido\n");
+        NoLista *remover = auxPercorre->proximo;
+        auxPercorre->proximo = auxPercorre->proximo->proximo; //Proximo do aux recebe proximo do proximo para manter a ordem da lista
+        free(remover);
+        lista->numElemento--;
+        return 0;
+    }
+    return 0;
+}
+
 void destroiLista(Lista *list) {
     NoLista *aux = list->inicio;
     while (list->inicio != NULL) {
@@ -80,12 +124,43 @@ int main() {
     inserirElemento(&lista, -12);
     inserirElemento(&lista, 54);
     inserirElemento(&lista, 7);
+    if(pesquisarLista(&lista, 8) == 1) {
+        printf("Elemento esta na lista\n");
+    } else {
+        printf("Elemento nao encontrado\n");
+    }
+    if(pesquisarLista(&lista, 0) == 1) {
+        printf("Elemento esta na lista\n");
+    } else {
+        printf("Elemento nao encontrado\n");
+    }
+    if(pesquisarLista(&lista, 7) == 1) {
+        printf("Elemento esta na lista\n");
+    } else {
+        printf("Elemento nao encontrado\n");
+    }
 
+    removerLista(&lista, 8);
     imprimirLista(&lista);
+    if(pesquisarLista(&lista, 8) == 1) {
+        printf("Elemento esta na lista\n");
+    } else {
+        printf("Elemento nao encontrado\n");
+    }
+
+    removerLista(&lista, 7);
+    imprimirLista(&lista);
+    if(pesquisarLista(&lista, 7) == 1) {
+        printf("Elemento esta na lista\n");
+    } else {
+        printf("Elemento nao encontrado\n");
+    }
+    removerLista(&lista, 1000);
+    imprimirLista(&lista);
+
 
     destroiLista(&lista);
 
-    imprimirLista(&lista);
 
     return EXIT_SUCCESS;
 }
