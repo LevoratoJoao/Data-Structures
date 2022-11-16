@@ -143,8 +143,8 @@ void converterBinario(PilhaDinamica *p, int numero) {
     if (numero == 0) {
         printf("Armazenando numero em binario na pilha...\n");
     } else {
-        converterBinario(p, numero / 2);
         inserirPilha(p, numero % 2);
+        converterBinario(p, numero / 2);
     }
 }
 
