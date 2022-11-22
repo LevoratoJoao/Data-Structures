@@ -7,12 +7,13 @@ typedef struct NoFila
 {
     int conteudo;
     PtrNoFila proximo;
+    //struct NoFila *prox;
 } NoFila;
 
 typedef struct
 {
-    PtrNoFila inicio;
-    PtrNoFila final;
+    PtrNoFila inicio; //NoFila inicio
+    PtrNoFila final; //NoFila final
     int quantidade;
 } FilaDinamica;
 

@@ -53,7 +53,7 @@ int pesquisaAVL(NoAVL **arvore, int n) {
         return 1;
     }
     if (n > (*arvore)->chave) {
-        return (pesquisaAVL(&(*arvore)->direita, n));
+        return (pesquisaAVL(&(*arvore)->esquerda, n));
     } else {
         return (pesquisaAVL(&(*arvore)->direita, n));
     }
