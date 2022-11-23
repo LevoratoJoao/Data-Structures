@@ -335,6 +335,9 @@ void inserirPaciente(Lista *pacientes) {
     printf("Sexo: ");
     scanf("%c", &aux.sexo);
     aux.sexo = toupper(aux.sexo);
+    if (aux.sexo != "M" && aux.sexo != "F") {
+        return;
+    }
     printf("Nascimento\nDia: ");
     scanf("%d", &aux.nascimento.dia);
     printf("Mes: ");

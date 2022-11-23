@@ -170,18 +170,18 @@ void destruirArvoreAVL(NoAVL **arvoreAvl) {
 }
 
 int pesquisarAVL(NoAVL **arvore, char *termo) {
-    if (estaVaziaAVL(&(*arvore))) {
-        printf("Esta vazia\n");
-        return 0;
-    }
-    if (strcmp((*arvore)->obj.termo, termo) == 0) {
-        return (*arvore)->obj.pagina;
+    char *result = NULL;    
+    //result = strstr((*arvore)->obj.termo, termo);
+    if (strstr((*arvore)->obj.termo, termo) != NULL) {
+        printf("Termo encontrado pagina %d\n", (*arvore)->obj.pagina);
+        return 1;
     }
     if (strcmp((*arvore)->obj.termo, termo) > 0) {
         return (pesquisarAVL(&(*arvore)->esquerda, termo));
     } else {
         return (pesquisarAVL(&(*arvore)->direita, termo));
     }
+    printf("Termo nao encontrado\n");
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -291,11 +291,7 @@ void menuSistema(NoAVL **arvoreAvl, FILE *saida) {
             setbuf(stdin, NULL);
             fgets(termo, 25, stdin);
             termo[strcspn(termo, "\n")] = '\0';
-            if (pesquisarAVL(&(*arvoreAvl), termo) > 0) {
-                printf("Termo encontrado na pagina %d\n", pesquisarAVL(&(*arvoreAvl), termo));
-            } else {
-                printf("Elemento nao encontrado\n");
-            }
+            pesquisarAVL(&(*arvoreAvl), termo);
             free(termo);
             break;
         case 3: //Imprimiir termos e paginas (A - Z)
@@ -312,7 +308,7 @@ void menuSistema(NoAVL **arvoreAvl, FILE *saida) {
     }
 }
 
-int main() {
+int main(int argc, char *argv[]) {
     FILE *entrada = op_file("remissivo.xlsx");
     FILE *saida = cr_file("remissivo2.xlsx"); //Nao pede pra salvar os novos dados
     NoAVL *arvore = iniciarArvoreAvl();
