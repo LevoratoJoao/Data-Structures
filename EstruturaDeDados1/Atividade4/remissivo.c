@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <ctype.h>
 
 typedef struct {
     char termo[25];
@@ -38,6 +39,11 @@ typedef struct noAvl {
     int altura;
 } NoAVL;
 
+/**
+ * @brief Funcao que inicia a arvore AVL retornando NULL para ela
+ *
+ * @return NoAVL*
+ */
 NoAVL *iniciarArvoreAvl(){
     return NULL;
 }
@@ -135,8 +141,7 @@ void inserirArvoreAVL(NoAVL **arvoreAvl, Objeto termos){
             rotacaoDireita(&(*arvoreAvl)->direita);
         }
         rotacaoEsquerda(arvoreAvl);
-    }
-    else if (alturaArvoreAVL(&(*arvoreAvl)->direita) - alturaArvoreAVL(&(*arvoreAvl)->esquerda) == -2) { //Diferença da direita - esquerda == -2 -> rotacao esquerda -> rotacao esquerda
+    } else if (alturaArvoreAVL(&(*arvoreAvl)->direita) - alturaArvoreAVL(&(*arvoreAvl)->esquerda) == -2) { //Diferença da direita - esquerda == -2 -> rotacao esquerda -> rotacao esquerda
         if (alturaArvoreAVL(&(*arvoreAvl)->esquerda->direita) - alturaArvoreAVL(&(*arvoreAvl)->esquerda->esquerda) > 0) { //Se altura da direita->direita - altura direita->esquerda for menor que 0 -> rotacaoDireita
             rotacaoEsquerda(&(*arvoreAvl)->esquerda);
         }
@@ -169,19 +174,27 @@ void destruirArvoreAVL(NoAVL **arvoreAvl) {
     (*arvoreAvl) = NULL;
 }
 
-int pesquisarAVL(NoAVL **arvore, char *termo) {
-    char *result = NULL;    
-    //result = strstr((*arvore)->obj.termo, termo);
-    if (strstr((*arvore)->obj.termo, termo) != NULL) {
+/**
+ * @brief Funcao recursiva para pesquisa de um termo no livro printando sua página caso encontrado
+ *
+ * @param arvore
+ * @param termo
+ * @return int
+ */
+void pesquisarAVL(NoAVL **arvore, char *termo) {
+    if ((*arvore) == NULL) { //Se arvore for NULL final do loop de recursao
+        printf("Termo nao encontrado\n");
+        return;
+    }
+    if (strstr((*arvore)->obj.termo, termo) != NULL) { //strstr ira comparar uma substring dentro da string desejada, util caso usuario for pesquisar uma palavra que contenha um /<outra_palavra> dessa forma sera encontrado a palavra que ele deseja
         printf("Termo encontrado pagina %d\n", (*arvore)->obj.pagina);
-        return 1;
+        return;
     }
-    if (strcmp((*arvore)->obj.termo, termo) > 0) {
-        return (pesquisarAVL(&(*arvore)->esquerda, termo));
+    if (strcmp((*arvore)->obj.termo, termo) > 0) { //Termo atual da arvore é maior que termo pesquisado
+        return (pesquisarAVL(&(*arvore)->esquerda, termo)); //Recursao com arvore->esquerda
     } else {
-        return (pesquisarAVL(&(*arvore)->direita, termo));
+        return (pesquisarAVL(&(*arvore)->direita, termo)); //Recursao com arvore->direita
     }
-    printf("Termo nao encontrado\n");
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -259,11 +272,13 @@ void adicionarTermo(NoAVL **termos) {
     printf("Termo: ");
     setbuf(stdin, NULL);
     fgets(aux.termo, 25, stdin);
+    //Modifica a primeira letra do termo inserido para maiusculo
     aux.termo[strcspn(aux.termo, "\n")] = '\0';
+    aux.termo[0] = toupper(aux.termo[0]);
     printf("Pagina: ");
     scanf("%d", &aux.pagina);
     if (aux.pagina < 0) {
-        printf("Pagina invalida. Digite novamente\n");
+        printf("Pagina invalida!!! Digite novamente\n");
         return;
     }
     inserirArvoreAVL(termos, aux);
@@ -309,11 +324,13 @@ void menuSistema(NoAVL **arvoreAvl, FILE *saida) {
 }
 
 int main(int argc, char *argv[]) {
-    FILE *entrada = op_file("remissivo.xlsx");
-    FILE *saida = cr_file("remissivo2.xlsx"); //Nao pede pra salvar os novos dados
+    FILE *entrada = op_file(argv[1]);
+    FILE *saida = cr_file(argv[2]); //Nao é pedido para salvar os novos dados inseridos
     NoAVL *arvore = iniciarArvoreAvl();
     rd_file(entrada, &arvore);
     menuSistema(&arvore, saida);
     destruirArvoreAVL(&arvore);
+    fclose(entrada);
+    fclose(saida);
     return EXIT_SUCCESS;
 }
