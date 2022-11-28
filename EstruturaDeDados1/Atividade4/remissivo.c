@@ -187,7 +187,7 @@ void pesquisarAVL(NoAVL **arvore, char *termo) {
         return;
     }
     if (strstr((*arvore)->obj.termo, termo) != NULL) { //strstr ira comparar uma substring dentro da string desejada, util caso usuario for pesquisar uma palavra que contenha um /<outra_palavra> dessa forma sera encontrado a palavra que ele deseja
-        printf("Termo encontrado pagina %d\n", (*arvore)->obj.pagina);
+        printf("Termo %s encontrado pagina %d\n", (*arvore)->obj.termo, (*arvore)->obj.pagina);
     }
     if (strcmp((*arvore)->obj.termo, termo) >= 0) { //Termo atual da arvore é maior que termo pesquisado
         return (pesquisarAVL(&(*arvore)->esquerda, termo)); //Recursao com arvore->esquerda
