@@ -183,14 +183,13 @@ void destruirArvoreAVL(NoAVL **arvoreAvl) {
  */
 void pesquisarAVL(NoAVL **arvore, char *termo) {
     if ((*arvore) == NULL) { //Se arvore for NULL final do loop de recursao
-        printf("Termo nao encontrado\n");
+        printf("Fim da lista de termos\n");
         return;
     }
     if (strstr((*arvore)->obj.termo, termo) != NULL) { //strstr ira comparar uma substring dentro da string desejada, util caso usuario for pesquisar uma palavra que contenha um /<outra_palavra> dessa forma sera encontrado a palavra que ele deseja
         printf("Termo encontrado pagina %d\n", (*arvore)->obj.pagina);
-        return;
     }
-    if (strcmp((*arvore)->obj.termo, termo) > 0) { //Termo atual da arvore é maior que termo pesquisado
+    if (strcmp((*arvore)->obj.termo, termo) >= 0) { //Termo atual da arvore é maior que termo pesquisado
         return (pesquisarAVL(&(*arvore)->esquerda, termo)); //Recursao com arvore->esquerda
     } else {
         return (pesquisarAVL(&(*arvore)->direita, termo)); //Recursao com arvore->direita
@@ -324,8 +323,8 @@ void menuSistema(NoAVL **arvoreAvl, FILE *saida) {
 }
 
 int main(int argc, char *argv[]) {
-    FILE *entrada = op_file(argv[1]);
-    FILE *saida = cr_file(argv[2]); //Nao é pedido para salvar os novos dados inseridos
+    FILE *entrada = op_file("remissivo.xlsx");
+    FILE *saida = cr_file("saida.txt"); //Nao é pedido para salvar os novos dados inseridos
     NoAVL *arvore = iniciarArvoreAvl();
     rd_file(entrada, &arvore);
     menuSistema(&arvore, saida);
