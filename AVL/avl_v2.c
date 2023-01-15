@@ -48,6 +48,29 @@ int alturaArvoreAVL(NoAVL **arvoreAvl){
     return ((*arvoreAvl)->altura);
 }
 
+int fatorDebalanceamento(NoAVL **arvoreAvl) {
+    if (arvoreAvl == 0) return 0;
+    return alturaArvoreAVL(&(*arvoreAvl)->direita) - alturaArvoreAVL(&(*arvoreAvl)->esquerda);
+}
+
+//direita - esquerda == 2 -> rotacao direita -> rotacao esquerda
+//Se altura da direita->direita - altura direita->esquerda for menor que 0 -> rotacaoDireita
+//direita - esquerda == -2 -> rotacao esquerda -> rotacao direita
+//Se altura da esquerda->direita - altura esquerda->esquerda for menor que 0 -> rotacaoEsquerda
+void rotacionarArvoreAvl(NoAVL **arvoreAvl) {
+    if(fatorDebalanceamento(&(*arvoreAvl)) == 2) {
+        if (fatorDebalanceamento(&(*arvoreAvl)->direita) < 0) {
+            rotacaoDireita(&(*arvoreAvl)->direita);
+        }
+        rotacaoEsquerda(arvoreAvl);
+    } else if(fatorDebalanceamento(&(*arvoreAvl)) == -2) {
+        if(fatorDebalanceamento(&(*arvoreAvl)->esquerda) > 0) {
+            rotacaoEsquerda(&(*arvoreAvl)->esquerda);
+        }
+        rotacaoDireita(arvoreAvl);
+    }
+}
+
 void inserirArvoreAVL(NoAVL **arvoreAvl, int chave){
     if ((*arvoreAvl) == NULL) {
         (*arvoreAvl) = (NoAVL*) malloc(sizeof(NoAVL));
@@ -63,17 +86,7 @@ void inserirArvoreAVL(NoAVL **arvoreAvl, int chave){
     (*arvoreAvl)->chave > chave ? inserirArvoreAVL(&((*arvoreAvl)->esquerda), chave) : inserirArvoreAVL(&((*arvoreAvl)->direita), chave); //Se chave atual da arvore for maior que a chave insre na esquerda se nao for insere na direita
     //Obs: altura + direita | altura - esquerda | balanceado +1, 0, -1
     (*arvoreAvl)->altura = maxAlturaFilho(arvoreAvl) + 1;
-    if(alturaArvoreAVL(&(*arvoreAvl)->direita) - alturaArvoreAVL(&(*arvoreAvl)->esquerda) == 2) { //direita - esquerda == 2 -> rotacao direita -> rotacao esquerda
-        if (alturaArvoreAVL(&(*arvoreAvl)->direita->direita) - alturaArvoreAVL(&(*arvoreAvl)->direita->esquerda) < 0) { //Se altura da direita->direita - altura direita->esquerda for menor que 0 -> rotacaoDireita
-            rotacaoDireita(&(*arvoreAvl)->direita);
-        }
-        rotacaoEsquerda(arvoreAvl);
-    } else if(alturaArvoreAVL(&(*arvoreAvl)->direita) - alturaArvoreAVL(&(*arvoreAvl)->esquerda) == -2) { //Diferença da direita - esquerda == -2 -> rotacao esquerda -> rotacao esquerda
-        if(alturaArvoreAVL(&(*arvoreAvl)->esquerda->direita) - alturaArvoreAVL(&(*arvoreAvl)->esquerda->esquerda) > 0) { //Se altura da direita->direita - altura direita->esquerda for menor que 0 -> rotacaoDireita
-            rotacaoEsquerda(&(*arvoreAvl)->esquerda);
-        }
-        rotacaoDireita(arvoreAvl);
-    }
+    rotacionarArvoreAvl(arvoreAvl);
 }
 
 void emOrdemAVL(NoAVL **arvoreAvl) {
@@ -136,14 +149,14 @@ void excluirElem(NoAVL **no, int chave){
     if ((*no)->chave > chave) excluirElem(&(*no)->esquerda, chave); //Se chave atual for maior que chave exclui->esquerda
     else excluirElem(&(*no)->direita, chave); //Senao exclui->direita
     (*no)->altura = maxAlturaFilho(no) + 1;
-    if(alturaArvoreAVL(&(*no)->direita) - alturaArvoreAVL(&(*no)->esquerda) == 2) {
+    if (alturaArvoreAVL(&(*no)->direita) - alturaArvoreAVL(&(*no)->esquerda) == 2) {
         if(alturaArvoreAVL(&(*no)->direita->direita) - alturaArvoreAVL(&(*no)->direita->esquerda) < 0) {
             rotacaoDireita(&(*no)->direita);
         }
         rotacaoEsquerda(no);
     }
-    else if(alturaArvoreAVL(&(*no)->direita) - alturaArvoreAVL(&(*no)->esquerda) == -2) {
-        if(alturaArvoreAVL(&(*no)->esquerda->direita) - alturaArvoreAVL(&(*no)->esquerda->esquerda) > 0)  rotacaoEsquerda(&(*no)->esquerda);
+    else if (alturaArvoreAVL(&(*no)->direita) - alturaArvoreAVL(&(*no)->esquerda) == -2) {
+        if (alturaArvoreAVL(&(*no)->esquerda->direita) - alturaArvoreAVL(&(*no)->esquerda->esquerda) > 0)  rotacaoEsquerda(&(*no)->esquerda);
         rotacaoDireita(no);
     }
 }

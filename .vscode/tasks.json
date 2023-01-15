@@ -3,32 +3,12 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "C/C++: gcc-11 arquivo de build ativo",
-            "command": "/usr/bin/gcc-11",
-            "args": [
-                "-fdiagnostics-color=always",
-                "-g",
-                "${file}",
-                "-o",
-                "${fileDirname}/bin/${fileBasenameNoExtension}"
-            ],
-            "options": {
-                "cwd": "${fileDirname}"
-            },
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "group": "build",
-            "detail": "compilador: /usr/bin/gcc-11"
-        },
-        {
-            "type": "cppbuild",
             "label": "C/C++: gcc-11 build active file",
             "command": "/usr/bin/gcc-11",
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${file}",
+                "*.c",
                 "-o",
                 "${fileDirname}/bin/${fileBasenameNoExtension}"
             ],
