@@ -3,11 +3,24 @@
 #include "listaEncadeada.h"
 
 // typedef struct NoLista *ponteiroLista;
-
-void inicializarLista(Lista *list)
+typedef struct obj
 {
+    int chave;
+    struct obj *proximo;
+} NoLista;
+
+typedef struct lista_encadeada
+{
+    NoLista *inicio;
+    int numElemento;
+} Lista;
+
+Lista *inicializarLista()
+{
+    Lista *list = (Lista*) malloc(sizeof(Lista));
     list->inicio = NULL;
     list->numElemento = 0;
+    return list;
 }
 
 int estaVazia(Lista *list)
@@ -132,4 +145,5 @@ void destroiLista(Lista *list)
         free(aux);
         aux = list->inicio;
     }
+    free(list);
 }

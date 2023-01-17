@@ -4,39 +4,39 @@
 
 int main()
 {
-    FilaEstatica fila;
+    FilaEstatica *fila = iniciaFila();
 
-    iniciaFila(&fila);
-
-    if (estaVazia(&fila))
+    if (estaVazia(fila))
     {
         printf("Esta vazia\n");
     }
-    if (estaCheia(&fila))
+    if (estaCheia(fila))
     {
         printf("Esta cheia\n");
     }
 
-    inserirFilaEstatica(&fila, 9);
-    imprimirFila(&fila);
-    printf("%d\n", tamanhoFila(&fila));
+    inserirFilaEstatica(fila, 9);
+    imprimirFila(fila);
+    printf("%d\n", tamanhoFila(fila));
 
-    inserirFilaEstatica(&fila, 10);
-    imprimirFila(&fila);
-    removerFilaEstatica(&fila);
+    inserirFilaEstatica(fila, 10);
+    imprimirFila(fila);
+    removerFilaEstatica(fila);
 
-    inserirFilaEstatica(&fila, 3);
+    inserirFilaEstatica(fila, 3);
 
-    inserirFilaEstatica(&fila, 4);
-    imprimirFila(&fila);
+    inserirFilaEstatica(fila, 4);
+    imprimirFila(fila);
 
-    printf("%d\n", tamanhoFila(&fila));
+    printf("%d\n", tamanhoFila(fila));
 
-    removerFilaEstatica(&fila);
+    removerFilaEstatica(fila);
 
-    imprimirFila(&fila);
+    imprimirFila(fila);
 
-    printf("%d\n", tamanhoFila(&fila));
+    printf("%d\n", tamanhoFila(fila));
+
+    freeFila(fila);
 
     return 0;
 }

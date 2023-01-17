@@ -1,19 +1,9 @@
 #ifndef listaEncadeada
 #define listaEncadeada
 
-typedef struct obj
-{
-    int chave;
-    struct obj *proximo;
-} NoLista;
+typedef struct lista_encadeada Lista;
 
-typedef struct listaEncadeada
-{
-    NoLista *inicio;
-    int numElemento;
-} Lista;
-
-void inicializarLista(Lista *list);
+Lista *inicializarLista();
 int estaVazia(Lista *list);
 int tamanhoLista(Lista *list);
 void inserirElemento(Lista *list, int chave);

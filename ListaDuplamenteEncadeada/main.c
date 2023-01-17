@@ -3,22 +3,19 @@
 #include "listaDupla.h"
 
 int main() {
-    Lista lista;
+    Lista *lista = inicializarLista();
+    inserirElemento(lista, 1);
+    inserirElemento(lista, 8);
+    inserirElemento(lista, -12);
+    inserirElemento(lista, 54);
+    inserirElemento(lista, 7);
+    inserirElemento(lista, 12);
+    inserirElemento(lista, 9);
+    inserirElemento(lista, 100);
 
-    inicializarLista(&lista);
-    inserirElemento(&lista, 1);
-    inserirElemento(&lista, 8);
-    inserirElemento(&lista, -12);
-    inserirElemento(&lista, 54);
-    inserirElemento(&lista, 7);
-    inserirElemento(&lista, 12);
-    inserirElemento(&lista, 9);
-    inserirElemento(&lista, 100);
+    imprimirLista(lista);
 
-    imprimirLista(&lista);
+    destroiLista(lista);
 
-    destroiLista(&lista);
-
-    imprimirLista(&lista);
     return 0;
 }

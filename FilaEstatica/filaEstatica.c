@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "filaEstatica.h"
+
+#define TAM 10
+
 /**
  *  FUNCOES ESTATICAS
  *  Modificacao:
@@ -12,7 +15,27 @@
  *  - tamanho
  **/
 
-// FUNCOES DE CONSULTA
+typedef struct fila_estatica {
+    int inicio;
+    int fim;
+    int vetor[TAM];
+    int quantidade;
+} FilaEstatica;
+
+/**
+ * @brief iniciar
+ *
+ * @param fila
+ */
+FilaEstatica *iniciaFila()
+{
+    FilaEstatica *fila = (FilaEstatica*) malloc(sizeof(FilaEstatica));
+    fila->quantidade = 0;
+    fila->inicio = 0;
+    fila->fim = -1;
+    return fila;
+}
+
 /**
  * @brief estaVazia
  *
@@ -38,18 +61,6 @@ int estaCheia(FilaEstatica *fila)
 int tamanhoFila(FilaEstatica *fila)
 {
     return fila->quantidade;
-}
-
-/**
- * @brief iniciar
- *
- * @param fila
- */
-void iniciaFila(FilaEstatica *fila)
-{
-    fila->quantidade = 0;
-    fila->inicio = 0;
-    fila->fim = -1;
 }
 
 // Atribui elemento indicado pelo fim
@@ -89,4 +100,9 @@ int removerFilaEstatica(FilaEstatica *fila)
     fila->quantidade--;
 
     return aux;
+}
+
+void freeFila(FilaEstatica *fila)
+{
+    free(fila);
 }

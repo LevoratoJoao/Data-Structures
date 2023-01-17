@@ -5,7 +5,6 @@
 // Defining comparator function as per the requirement
 static int myCompare(const void* a, const void* b)
 {
-
 	// setting up rules for comparison
 	return strcmp(*(const char**)a, *(const char**)b);
 }

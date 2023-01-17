@@ -1,33 +1,40 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#include "filaDinamica.h"
 
-typedef struct NoFila *PtrNoFila;
-
-typedef struct NoFila
+typedef struct no_fila
 {
     int conteudo;
-    PtrNoFila proximo;
-    //struct NoFila *prox;
+    struct no_fila *proximo;
+    // struct NoFila *prox;
 } NoFila;
 
-typedef struct
+typedef struct fila_dinamica
 {
-    PtrNoFila inicio; //NoFila inicio
-    PtrNoFila final; //NoFila final
+    NoFila *inicio; // NoFila inicio
+    NoFila *final;  // NoFila final
     int quantidade;
 } FilaDinamica;
 
-void iniciaFilaDinamica(FilaDinamica *fila) {
+FilaDinamica *iniciaFilaDinamica()
+{
+    FilaDinamica *fila = (FilaDinamica*) malloc(sizeof(FilaDinamica));
     fila->final = NULL;
     fila->inicio = NULL;
     fila->quantidade = 0;
+    return fila;
 }
 
-int vaziaFilaDinamica(FilaDinamica *fila) {
-    return (fila->inicio == NULL);
+int vaziaFilaDinamica(FilaDinamica *fila)
+{
+    if (fila == NULL) return printf("Fila vazia\n");
+    return (fila->quantidade == 0);
 }
 
-int tamanhoFilaDinamica(FilaDinamica *fila) {
+int tamanhoFilaDinamica(FilaDinamica *fila)
+{
+    if (fila == NULL) return printf("Fila vazia\n");
     return fila->quantidade;
 }
 
@@ -36,95 +43,60 @@ int tamanhoFilaDinamica(FilaDinamica *fila) {
 // Inicio
 
 // Funcoes de Modificacao
-void inserirFilaDinamica(FilaDinamica *fila, int n) {
+void inserirFilaDinamica(FilaDinamica *fila, int n)
+{
     // Criar aux de NoFila, alocar mem, copiar informacao pra ele
-    PtrNoFila aux;
-    aux = (PtrNoFila) malloc(sizeof(NoFila));
+    NoFila *aux;
+    aux = (NoFila *)malloc(sizeof(NoFila));
     aux->conteudo = n;
-    if (vaziaFilaDinamica(fila)) { // Primeira insercao
+    aux->proximo = NULL;
+    if (vaziaFilaDinamica(fila))
+    {                                     // Primeira insercao
         fila->inicio = fila->final = aux; // inicio e final da fila apontam pro novo no
-        aux->proximo = NULL;
-    } else { // Demais insercoes
-        aux->proximo = fila->final->proximo; // Proximo do aux aponta para quem é o prox do fim (NULL)
-        fila->final->proximo = aux; // Proximo do fim aponta para o novo elemento
-        fila->final = fila->final->proximo; // Fim recebe o proximo do fim
+    }
+    else
+    {                                        // Demais insercoes
+        fila->final->proximo = aux;          // Proximo do fim aponta para o novo elemento
+        fila->final = aux;  // Fim recebe o proximo do fim
     }
     fila->quantidade++;
 }
 
-void imprimirFila(FilaDinamica *fila) {
+void imprimirFila(FilaDinamica *fila)
+{
     printf("fila = {");
-    for (PtrNoFila i = fila->inicio; i != NULL; i = i->proximo) {
+    for (NoFila *i = fila->inicio; i != NULL; i = i->proximo)
+    {
         printf(" %d ", i->conteudo);
     }
     printf("}\n");
 }
 
-void removerFilaDinamica(FilaDinamica *fila) {
-    if (!vaziaFilaDinamica(fila)) {
-        //ptr auxiliar
-        PtrNoFila aux;
-        //copiar a info pro user
+void removerFilaDinamica(FilaDinamica *fila)
+{
+    if (!vaziaFilaDinamica(fila))
+    {
+        // ptr auxiliar
+        NoFila *aux;
+        // copiar a info pro user
         aux = fila->inicio;
-        //att o inicio do prox dele
+        // att o inicio do prox dele
         fila->inicio = fila->inicio->proximo;
         free(aux);
-        //decrementa qtd
+        // decrementa qtd
         fila->quantidade--;
-    } else {
+    }
+    else
+    {
         printf("Fila esta vazia\n");
     }
 }
 
-void destruirFila(FilaDinamica *fila) {
-    while (fila->quantidade != 0) {
+void destruirFila(FilaDinamica *fila)
+{
+    while (fila->quantidade != 0)
+    {
         removerFilaDinamica(fila);
     }
-}
-
-int main() {
-    FilaDinamica fila;
-
-    iniciaFilaDinamica(&fila);
-
-    if(vaziaFilaDinamica(&fila)) {
-        printf("Esta vazia\n");
-    }
-    inserirFilaDinamica(&fila, 3);
-    inserirFilaDinamica(&fila, 4);
-    inserirFilaDinamica(&fila, 9);
-    inserirFilaDinamica(&fila, 8);
-    inserirFilaDinamica(&fila, 6);
-    inserirFilaDinamica(&fila, 7);
-
-    imprimirFila(&fila);
-
-    if(vaziaFilaDinamica(&fila)) {
-        printf("Esta vazia\n");
-    }
-    printf("Tamanho da fila: %d\n", tamanhoFilaDinamica(&fila));
-
-    removerFilaDinamica(&fila);
-    imprimirFila(&fila);
-    removerFilaDinamica(&fila);
-    imprimirFila(&fila);
-    removerFilaDinamica(&fila);
-    imprimirFila(&fila);
-    removerFilaDinamica(&fila);
-    imprimirFila(&fila);
-    removerFilaDinamica(&fila);
-    imprimirFila(&fila);
-    removerFilaDinamica(&fila);
-    imprimirFila(&fila);
-    removerFilaDinamica(&fila);
-
-    inserirFilaDinamica(&fila, 9);
-    inserirFilaDinamica(&fila, 8);
-    inserirFilaDinamica(&fila, 6);
-    imprimirFila(&fila);
-    printf("Tamanho da fila: %d\n", tamanhoFilaDinamica(&fila));
-    destruirFila(&fila);
-    printf("Tamanho da fila: %d\n", tamanhoFilaDinamica(&fila));
-
-    return 0;
+    free(fila);
 }
