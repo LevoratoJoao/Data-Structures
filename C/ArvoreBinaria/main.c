@@ -8,12 +8,15 @@ int main() {
     if (estaVazia(raiz)) {
         printf("Arvore esta vazia\n");
     }
-    inserirArvore(&raiz, 12);
+    inserirArvore(&raiz, 7);
     inserirArvore(&raiz, 4);
-    inserirArvore(&raiz, 2);
-    inserirArvore(&raiz, 8);
     inserirArvore(&raiz, 6);
-    inserirArvore(&raiz, 16);
+    inserirArvore(&raiz, 2);
+    inserirArvore(&raiz, 3);
+    inserirArvore(&raiz, 5);
+    inserirArvore(&raiz, 8);
+    inserirArvore(&raiz, 1);
+    inserirArvore(&raiz, 9);
     if (!estaVazia(raiz)) {
         printf("Arvore nao esta vazia\n");
     }
@@ -38,11 +41,11 @@ int main() {
     if (estaVazia(raiz)) {
         printf("Arvore cortada\n");
     }
-    removeArvore(&raiz, 9);
+    removeArvore(&raiz, 7);
     printf("Em Ordem: { ");
     emOrdem(&raiz);
     printf("}\n");
-    removeArvore(&raiz, 2);
+    removeArvore(&raiz, 6);
     printf("Em Ordem: { ");
     emOrdem(&raiz);
     printf("}\n");
