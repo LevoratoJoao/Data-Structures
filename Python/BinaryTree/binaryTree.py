@@ -1,13 +1,8 @@
 class BinaryTree:
     def __init__(self, data = None):
-        if data:
             self.right = None
             self.left = None
             self.data = data
-        else:
-            self.right = None
-            self.left = None
-            self.data = None
 
     def isEmpty(self):
         if self.data == None:
