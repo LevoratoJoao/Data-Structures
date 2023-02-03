@@ -189,17 +189,17 @@ void excluirElem(NoAVL **no, int chave)
     else
         excluirElem(&(*no)->direita, chave); // Senao exclui->direita
     (*no)->altura = maxAlturaFilho(no) + 1;
-    if (alturaArvoreAVL(&(*no)->direita) - alturaArvoreAVL(&(*no)->esquerda) == 2)
+    if (fatorDebalanceamento(&(*no)) == 2)
     {
-        if (alturaArvoreAVL(&(*no)->direita->direita) - alturaArvoreAVL(&(*no)->direita->esquerda) < 0)
+        if (fatorDebalanceamento(&(*no)->direita) < 0)
         {
             rotacaoDireita(&(*no)->direita);
         }
         rotacaoEsquerda(no);
     }
-    else if (alturaArvoreAVL(&(*no)->direita) - alturaArvoreAVL(&(*no)->esquerda) == -2)
+    else if (fatorDebalanceamento(&(*no) == -2))
     {
-        if (alturaArvoreAVL(&(*no)->esquerda->direita) - alturaArvoreAVL(&(*no)->esquerda->esquerda) > 0)
+        if (fatorDebalanceamento(&(*no)->esquerda) > 0)
             rotacaoEsquerda(&(*no)->esquerda);
         rotacaoDireita(no);
     }

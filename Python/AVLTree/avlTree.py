@@ -7,7 +7,7 @@ class AvlTree:
 
     def maxHeightSon(self):
         if self.left == None and self.right == None:
-            return (0)
+            return 0
         elif self.left == None:
             return self.right.height
         elif self.right == None:
@@ -83,3 +83,37 @@ class AvlTree:
             self.left.preOrder()
         if self.right is not None:
             self.right.preOrder()
+
+    def delete(self, data):
+        if self.data == None:
+            return
+        if self.data == data:
+            if self.left == None and self.right == None:
+                self = None
+            elif self.left == None:
+                self = self.right
+            elif self.right == None:
+                self = self.left
+            else:
+                aux = self
+                prev = self
+                self = self.left
+                while self.right is not None:
+                    prev = self
+                    self = self.right
+                self.right = aux.right
+                prev.right = self.left
+                if aux != prev:
+                    self.left = aux.left
+                self.left.height = self.left.maxHeightSon() + 1
+                self.right.height = self.right.maxHeightSon() + 1
+                self.height = self.maxHeightSon() + 1
+                return self
+        if self.data < data:
+            self.right = self.right.delete(data)
+        #  self.data < data
+        else:
+            self.left = self.left.delete(data)
+        self.height = self.maxHeightSon() + 1
+        self = self.rotateTree()
+        return self
