@@ -1,9 +1,8 @@
 class SortAlgorithm:
     def __init__(self, array):
         self.data = array
-        
+            
     def bubbleSort(self, op):
-        len(self.data)
         trade = True
         while (trade is True):
             trade = False
@@ -22,7 +21,17 @@ class SortAlgorithm:
             for j in range(i + 1, len(self.data)):
                 if self.data[j] < self.data[lower] and op == 1:
                     lower = j
-                if self.data[j] > self.data[lower] and OP == 0:
+                if self.data[j] > self.data[lower] and op == 0:
                     lower = j
             self.data[i], self.data[lower] = self.data[lower], self.data[i]
+        return self.data
+    
+    def insertionSort(self):
+        for i in range(1, len(self.data)):
+            tmp = self.data[i]
+            index = i - 1
+            while(index >= 0 and tmp < self.data[index]):
+                self.data[index + 1] = self.data[index]
+                index = index - 1
+            self.data[index + 1] = tmp
         return self.data
