@@ -46,39 +46,37 @@ class AvlTree:
     def rotateTree(self):
         if self.balanceFactor() == 2:
             if self.right.balanceFactor() < 0:
-                self = self.right.rotateRight()
-            self = self.rotateLeft()
-            return self
+                self.right=self.right.rotateRight()
+            self=self.rotateLeft()
+
         elif self.balanceFactor() == -2:
             if self.left.balanceFactor() > 0:
-                self = self.left.rotateLeft()
-            self = self.rotateRight()
-            return self
+                self.left=self.left.rotateLeft()
+            self=self.rotateRight()
         return self
 
     def insert(self, data):
         if self.data == None:
             self.data = data
             self.height = 1
-            return
+            return self
         if self.data > data:
             if self.left == None:
                 self.left = AvlTree(data, 1)
             else:
-                self.left.insert(data)
+                self.left=self.left.insert(data)
         else:
             if self.right == None:
-                self.right = AvlTree(data, 1)
+               self.right = AvlTree(data, 1)
             else:
-                self.right.insert(data)
+                self.right=self.right.insert(data)
         self.height = self.maxHeightSon() + 1
-        self = self.rotateTree()
-        return self
+        return self.rotateTree()
 
     def preOrder(self):
         if self.data == None:
             return
-        print(self.data)
+        print(self.data," - ", self.height)
         if self.left is not None:
             self.left.preOrder()
         if self.right is not None:
@@ -111,9 +109,7 @@ class AvlTree:
                 return self
         if self.data < data:
             self.right = self.right.delete(data)
-        #  self.data < data
         else:
             self.left = self.left.delete(data)
         self.height = self.maxHeightSon() + 1
-        self = self.rotateTree()
-        return self
+        return self.rotateTree()
