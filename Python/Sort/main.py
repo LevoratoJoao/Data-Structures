@@ -1,5 +1,5 @@
-from sortAlgorithm import SortAlgorithm
+import sortAlgorithm
 
 sort = [23, 4, 67, -8, 90, 54, 21]
-sort = SortAlgorithm(sort)
-print(sort.insertionSort())
+sort = sortAlgorithm.mergeSort(sort)
+print(sort)

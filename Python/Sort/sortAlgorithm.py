@@ -1,37 +1,63 @@
-class SortAlgorithm:
-    def __init__(self, array):
-        self.data = array
-            
-    def bubbleSort(self, op):
-        trade = True
-        while (trade is True):
-            trade = False
-            for i in range(0, len(self.data) - 1):
-                if self.data[i] > self.data[i+1] and op == 1:
-                    self.data[i], self.data[i+1] = self.data[i+1], self.data[i]
-                    trade = True
-                if self.data[i] > self.data[i+1] and op == 0:
-                    self.data[i], self.data[i+1] = self.data[i+1], self.data[i]
-                    trade = True
-        return self.data
+def bubbleSort(array, op):
+    trade = True
+    while (trade is True):
+        trade = False
+        for i in range(0, len(array) - 1):
+            if array[i] > array[i+1] and op == 1:
+                array[i], array[i+1] = array[i+1], array[i]
+                trade = True
+            if array[i] > array[i+1] and op == 0:
+                array[i], array[i+1] = array[i+1], array[i]
+                trade = True
+    return array
 
-    def selectionSort(self, op):
-        for i in range(0, len(self.data) - 1):
-            lower = i
-            for j in range(i + 1, len(self.data)):
-                if self.data[j] < self.data[lower] and op == 1:
-                    lower = j
-                if self.data[j] > self.data[lower] and op == 0:
-                    lower = j
-            self.data[i], self.data[lower] = self.data[lower], self.data[i]
-        return self.data
-    
-    def insertionSort(self):
-        for i in range(1, len(self.data)):
-            tmp = self.data[i]
-            index = i - 1
-            while(index >= 0 and tmp < self.data[index]):
-                self.data[index + 1] = self.data[index]
-                index = index - 1
-            self.data[index + 1] = tmp
-        return self.data
+def selectionSort(array, op):
+    for i in range(0, len(array) - 1):
+        lower = i
+        for j in range(i + 1, len(array)):
+            if array[j] < array[lower] and op == 1:
+                lower = j
+            if array[j] > array[lower] and op == 0:
+                lower = j
+        array[i], array[lower] = array[lower], array[i]
+    return array
+
+def insertionSort(array):
+    for i in range(1, len(array)):
+        tmp = array[i]
+        index = i - 1
+        while(index >= 0 and tmp < array[index]):
+            array[index + 1] = array[index]
+            index = index - 1
+        array[index + 1] = tmp
+    return array
+
+def merge(array, first, last):
+    i = j = k = 0
+    while i < len(first) and j < len(last):
+        if first[i] < last[j]:
+            array[k] = first[i]
+            i += 1
+        else:
+            array[k] = last[j]
+            j += 1
+        k += 1
+    while i < len(first):
+        array[k] = first[i]
+        i += 1
+        k += 1
+    while j < len(last):
+        array[k] = last[j]
+        j += 1
+        k += 1
+    return array
+
+def mergeSort(array):
+    if len(array) > 1:
+        middle = len(array) // 2
+        first = array[:middle]
+        last = array[middle:]
+        mergeSort(first)
+        mergeSort(last)
+        array = merge(array, first, last)
+    return array
