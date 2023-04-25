@@ -87,3 +87,32 @@ def __quickSort(array, start, end):
 def quickSort(array):
     __quickSort(array, 0, len(array) - 1)
     return array
+
+def maxHeapify(array, index, heapSize):
+    left  = 2*index+1
+    right = 2*index+2
+    largest = index
+
+    if(left <= (heapSize-1)) and (array[left] > array[index]):
+        largest = left
+    if (right <= (heapSize-1)) and (array[right] > array[largest]):
+        largest = right
+
+    if index != largest:
+        array[index], array[largest] = array[largest], array[index]
+        maxHeapify(array, largest, heapSize-1)
+
+def buildMaxHeap(array, heapSize): #ok
+    indexes = range(len(array) // 2, -1, -1) # stop at -1 and increment -1
+    for index in indexes:
+        maxHeapify(array, index, heapSize)
+
+def heapSort(array):
+    heapSize = len(array)
+    buildMaxHeap(array, heapSize)
+    indexes = range(len(array)-1, 0, -1)
+    for index in indexes:
+        array[0], array[index] = array[index], array[0]
+        heapSize = heapSize - 1
+        maxHeapify(array, 0, heapSize)
+    return array
