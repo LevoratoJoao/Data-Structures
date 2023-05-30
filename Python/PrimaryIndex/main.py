@@ -1,3 +1,20 @@
-from PrimaryIndex import primaryIndex
+#------------------------------------------------------
+#------------------------------------------------------
+
+from primaryIndex import IndicePrimario
+
+#------------------------------------------------------
+# funcao main no python
+#------------------------------------------------------
+
 if __name__ == "__main__":
-    print(oi)
+	print("oi")
+
+	estrutura = IndicePrimario()
+	# construtor 
+
+	# destruir (chamado implicitamente pelo python)
+
+
+#------------------------------------------------------
+#------------------------------------------------------
