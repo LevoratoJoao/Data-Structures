@@ -5,7 +5,7 @@
 
 int main()
 {
-    GrafoMatriz *grafo = inicializarGrafo(5, true);
+    GrafoMatriz *grafo = inicializarGrafo(5, false);
 
     inserirGrafo(grafo, 1, 2);
     inserirGrafo(grafo, 1, 3);

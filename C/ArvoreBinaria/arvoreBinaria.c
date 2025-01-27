@@ -67,7 +67,7 @@ int pesquisaArvore(NoArvore **arvore, int n) {
 }
 
 int inserirArvore(NoArvore **arvore, int n) {
-    if (estaVazia((*arvore))) {
+    if ((*arvore) == NULL) {
         //Nova arvore
         (*arvore) = (NoArvore*) malloc(sizeof(NoArvore));
         (*arvore)->chave = n;
